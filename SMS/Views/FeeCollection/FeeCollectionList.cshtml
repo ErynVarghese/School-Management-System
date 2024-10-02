@@ -1,0 +1,117 @@
+﻿@model IEnumerable<SMS.Models.FeeCollection>
+
+@{
+    Layout = "~/Views/Shared/Layout2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Fee List</title>
+</head>
+<body>
+    <div>
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>}
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger"> @TempData["Error"]</div>}
+
+        <h2>Fee List</h2>
+        <div>@Html.ActionLink("New", "AddFeeCol", "FeeCollection")</div>
+
+        @using (Html.BeginForm("FeeCollectionList", "FeeCollection", FormMethod.Get))
+        {
+
+            <table>
+                <tr>
+                    <td>
+                        @Html.Label("Select Class Name")
+                    </td>
+                    <td>
+                        @Html.DropDownList("searchedname", (SelectList)ViewBag.ClassList, "Select a Class", new { @class = "form-control" })
+                    </td>
+                </tr>
+
+
+            </table>
+
+            <button type="submit" class="btn btn-primary">Search</button>}
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Fee Collection Id</th>
+                    <th>Student Name</th>
+                    <th>Class Name</th>
+                    <th> Installment1</th>
+                    <th> Installment2</th>
+                    <th> Installment3</th>
+                    <th>Fee Status</th>
+                    <th>Student Name</th>
+
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var f in Model)
+                {
+                <tr>
+                    <td>@Html.DisplayFor(model => f.FeeColId)</td>
+
+
+                    <td>@ViewBag.StudentDict[f.StudentId]</td>
+                    <td>@ViewBag.ClassDict[f.ClassId]</td>
+
+                    @if (f.Installment1 == "true")
+                    {
+                        <td>Paid</td>
+                    }
+                    else
+                    {
+                        <td>Unpaid</td>
+                    }
+
+                    @if (f.Installment2 == "true")
+                    {
+                        <td>Paid</td>
+                    }
+                    else
+                    {
+                        <td>Unpaid</td>
+                    }
+
+                    @if (f.Installment3 == "true")
+                    {
+                        <td>Paid</td>
+                    }
+                    else
+                    {
+                        <td>Unpaid</td>
+                    }
+
+
+                    <td>@Html.DisplayFor(model => f.FeeStatus) </td>
+                    <td>@Html.DisplayFor(model => f.StudentName) </td>
+
+
+                    <td>
+                        <a href="@Url.Action("AddFeeCol", "FeeCollection", new { id = f.FeeColId })">Edit</a>
+                        <a href="@Url.Action("DeleteFeeCol", "FeeCollection", new { id = f.FeeColId })">Delete</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+
+        @Html.ActionLink("Go Back to Main Page", "MainPage", "Login", null, new { @class = "btn btn-success" })
+
+
+    </div>
+</body>
+</html>

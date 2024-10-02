@@ -1,0 +1,59 @@
+﻿
+@{
+    Layout = "~/Views/Shared/Layout2.cshtml";
+    List<SMS.UserType> a = new List<SMS.UserType>();
+    a.Add(new SMS.UserType() {Id = "Employer", Q = "Employer" });
+    a.Add(new SMS.UserType() { Id = "Student", Q = "Student" });
+    a.Add(new SMS.UserType() { Id = "Admin", Q = "Admin" });
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>GetUserType</title>
+</head>
+<body>
+    <div>
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        @using (Html.BeginForm("GetUserType", "Login", FormMethod.Post))
+        {
+
+            <table class="table">
+
+                <tr>
+                    <td>
+                        @Html.Label("Login as:")
+                    </td>
+                    <td>
+                        @Html.DropDownList(
+                 "type", new SelectList(a, "Id", "Q"), new { @class = "form-control" })
+
+                    </td>
+                </tr>
+
+
+
+                <tr>
+                    <td>
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </td>
+                </tr>
+
+                </table>
+
+                }
+
+        </div>
+</body>
+</html>

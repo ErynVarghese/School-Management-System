@@ -1,0 +1,103 @@
+﻿@model SMS.Models.Class
+
+@{
+    Layout = "~/Views/Shared/Layout2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddClass</title>
+</head>
+<body>
+    <div>
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        @using (Html.BeginForm("AddClass", "Class", FormMethod.Post))
+        {
+
+            if (Model.ClassId > 0)
+            {
+            
+                <div>
+                    <strong>Class ID assigned is: </strong> @Model.ClassId
+                </div>
+            }
+            else if (ViewBag.MaxClassId != null)
+            {
+                <div>
+                    <strong>Class ID will be assigned as: </strong> @ViewBag.MaxClassId
+                </div>
+            }
+
+            @Html.HiddenFor(model => model.ClassId)
+
+            <table class="table">
+                <tr>
+                    <td>
+                        @Html.LabelFor(model => model.ClassName)
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.ClassName, new { @class = "form-control", type = "text", @pattern = "[A-Za-z  ]*" })
+                        @Html.ValidationMessageFor(model => model.ClassName)
+
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        @Html.LabelFor(model => model.ClassSize)
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.ClassSize, new { @class = "form-control", type = "number" })
+                        @Html.ValidationMessageFor(model => model.ClassSize)
+
+
+                    </td>
+                </tr>
+
+                 <tr>
+                    <td>
+                        @Html.LabelFor(model => model.ClassFee)
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.ClassFee, new { @class = "form-control", type = "number" ,step = "0.001" })
+                        @Html.ValidationMessageFor(model => model.ClassFee)
+
+
+                    </td>
+                </tr>
+
+
+                 <tr>
+                    <td>
+                        @Html.LabelFor(model => model.InstallmentNo)
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.InstallmentNo, new { @class = "form-control", type = "number" })
+                        @Html.ValidationMessageFor(model => model.InstallmentNo)
+
+
+                    </td>
+                </tr>
+
+            </table>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+
+        }
+
+    </div>
+</body>
+</html>

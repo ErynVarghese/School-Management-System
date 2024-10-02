@@ -1,0 +1,53 @@
+﻿@model SMS.Models.Admin
+
+@{
+    Layout = "~/Views/Shared/Layout2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>MainPage</title>
+</head>
+<body>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <div>
+        <div class="container">
+            <h2>Welcome, @Html.DisplayFor(model => model.AdminName)!!!</h2>
+            <p>Admin ID is: @Html.DisplayFor(model => model.AdminId)</p>
+        </div>
+    </div>
+
+
+    <div class="navbar">
+        <ul>
+            <li><a href="@Url.Action("EmpList", "EmpCRUD")"> Edit/View All Employee Records</a></li>
+            <li><a href="@Url.Action("StudList", "StudCRUD")"> Edit/View All Student Records</a></li>
+            <li><a href="@Url.Action("DeptList", "Department")"> Edit/View All Department Records</a></li>
+            <li><a href="@Url.Action("ClassList", "Class")"> Edit/View All Class Records</a></li>
+            <li><a href="@Url.Action("SectionList", "Section")">Edit/View all Section Records</a></li>
+            <li><a href="@Url.Action("FeeList", "Fee")">Edit/View all Fee Records</a></li>
+            <li><a href="@Url.Action("FeeCollectionList", "FeeCollection")">Edit/View all Fee Collection Records</a></li>
+            <li><a href="@Url.Action("StudRegister", "Registration")"> Register a New Student</a></li>
+            <li><a href="@Url.Action("EmpRegister", "Registration")"> Register a New Employer </a></li>
+            <li><a href="@Url.Action("AdminRegister", "Registration")"> Register a New Admin </a></li>
+
+        </ul>
+
+        @Html.ActionLink("Logout", "Logout", "Login", null, new { @class = "btn btn-danger" })
+    </div>
+
+
+</body>
+</html>

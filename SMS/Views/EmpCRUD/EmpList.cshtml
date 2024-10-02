@@ -1,0 +1,87 @@
+﻿@model IEnumerable<SMS.Models.Employer>
+
+@{ Layout = "~/Views/Shared/Layout2.cshtml"; }
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Employee List</title>
+</head>
+<body>
+    <div>
+        @if (TempData["Success"] != null)
+        {
+    <div class="alert alert-success">@TempData["Success"]</div>}
+
+        @if (TempData["Error"] != null)
+        {
+    <div class="alert alert-danger">@TempData["Error"]</div>}
+
+        <h2>Employee List</h2>
+        <div>@Html.ActionLink("New", "AddEmp", "EmpCRUD")</div>
+
+        @using (Html.BeginForm("EmpList", "EmpCRUD", FormMethod.Get))
+        {
+
+    <table>
+        <tr>
+            <td>
+                @Html.Label("Select Employee Name")
+            </td>
+            <td>
+                @Html.DropDownList("searchedname", (SelectList)ViewBag.EmployeeList, "Select an Employee", new { @class = "form-control" })
+            </td>
+        </tr>
+
+
+    </table>
+
+                    <button type="submit" class="btn btn-primary">Search</button>}
+
+        <table class="table ">
+            <thead>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Employee Name</th>
+                    <th>Contact Number</th>
+                    <th>Email</th>
+                    <th>Date of Birth</th>
+                    <th>Department ID</th>
+                    <th>Date of Joining</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var emp in Model)
+                {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => emp.EmpId)</td>
+                    <td>@Html.DisplayFor(modelItem => emp.EmpName)</td>
+                    <td>@Html.DisplayFor(modelItem => emp.ContactNo)</td>
+                    <td>@Html.DisplayFor(modelItem => emp.Email)</td>
+                    <td>@(emp.DOB.HasValue ? emp.DOB.Value.ToString("dd-MM-yyyy") : "")</td>
+                    <td>@Html.DisplayFor(modelItem => emp.DeptId)</td>
+                    <td>@(emp.DOJ.HasValue ? emp.DOJ.Value.ToString("dd-MM-yyyy") : "")</td>
+                    <td>
+                        <a href="@Url.Action("AddEmp", "EmpCRUD", new { id = emp.EmpId })">Edit</a> |
+                        <a href="@Url.Action("DeleteEmp", "EmpCRUD", new { id = emp.EmpId })">Delete</a>
+                    </td>
+                </tr>}
+            </tbody>
+        </table>
+
+        @if (Session["UserType"] != null)
+        {
+            if (Session["UserType"].ToString() == "Admin")
+            {
+                @Html.ActionLink("Go back to Main Page", "MainPage", "Login", null, new { @class = "btn btn-danger" })
+            }
+            else if (Session["UserType"].ToString() == "Employer")
+            {
+                @Html.ActionLink("Logout", "Logout", "Login", null, new { @class = "btn btn-danger" })
+            }
+        }
+    </div>
+</body>
+</html>

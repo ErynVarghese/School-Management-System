@@ -1,0 +1,84 @@
+﻿@model IEnumerable<SMS.Models.Section>
+
+@{
+    Layout = "~/Views/Shared/Layout2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Section List</title>
+</head>
+<body>
+    <div>
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+
+        <h2>Section List</h2>
+        <div>@Html.ActionLink("New", "AddSection", "Section")</div>
+
+        @using (Html.BeginForm("SectionList", "Section", FormMethod.Get))
+        {
+
+            <table>
+                <tr>
+                    <td>
+                        @Html.Label("Select a Class")
+                    </td>
+                    <td>
+                        @Html.DropDownList("searchedname", (SelectList)ViewBag.SectionList, "Select a Class", new { @class = "form-control" })
+                    </td>
+                </tr>
+
+
+            </table>
+
+            <button type="submit" class="btn btn-primary">Search</button>}
+
+        <table class="table">
+            <thead>
+
+                <tr>
+                    <th>Section ID</th>
+                    <th>Section Name</th>
+                    <th>Class ID</th>
+                    <th>Total Space</th>
+
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var s in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(model => s.SectionId)</td>
+                        <td>@Html.DisplayFor(model => s.SectionName)</td>
+                        <td>@Html.DisplayFor(model => s.ClassId)</td>
+                        <td>@Html.DisplayFor(model => s.TotalSpace)</td>
+
+
+                        <td>
+                            <a href="@Url.Action("AddSection", "Section", new { id = s.SectionId })">Edit</a>
+                            <a href="@Url.Action("DeleteSection", "Section", new { id = s.SectionId })">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @Html.ActionLink("Go Back to Main Page", "MainPage", "Login", null, new { @class = "btn btn-success" })
+
+
+    </div>
+</body>
+</html>

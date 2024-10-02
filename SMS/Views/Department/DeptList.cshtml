@@ -1,0 +1,78 @@
+﻿@model IEnumerable<SMS.Models.Department>
+
+@{
+    Layout = "~/Views/Shared/Layout2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DeptList</title>
+</head>
+<body>
+    <div>
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>}
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>}
+
+        <h2>Department List</h2>
+        <div>@Html.ActionLink("New", "AddDept", "Department")</div>
+
+
+        @using (Html.BeginForm("DeptList", "Department", FormMethod.Get))
+        {
+
+            <table>
+                <tr>
+                    <td>
+                        @Html.Label("Select Department Name")
+                    </td>
+                    <td>
+                        @Html.DropDownList("searchedname", (SelectList)ViewBag.DeptList, "Select a Department", new { @class = "form-control" })
+                    </td>
+                </tr>
+
+
+            </table>
+
+            <button type="submit" class="btn btn-primary">Search</button>}
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Department ID</th>
+                    <th>Department Name</th>
+
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var dept in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(model => dept.DeptId)</td>
+                        <td>@Html.DisplayFor(model => dept.DeptName)</td>
+
+
+                        <td>
+                            <a href="@Url.Action("AddDept", "Department", new { id = dept.DeptId })">Edit</a>
+                            <a href="@Url.Action("DeleteDept", "Department", new { id = dept.DeptId })">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @Html.ActionLink("Go Back to Main Page", "MainPage", "Login", null, new { @class = "btn btn-success" })
+
+
+    </div>
+</body>
+</html>

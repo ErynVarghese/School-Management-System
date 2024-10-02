@@ -1,0 +1,59 @@
+﻿@model SMS.Models.Department
+
+@{
+    Layout = "~/Views/Shared/Layout2.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddDept</title>
+</head>
+<body>
+    <div>
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        @using (Html.BeginForm("AddDept", "Department", FormMethod.Post))
+        {
+            
+            if (Model.DeptId > 0)
+            {
+                <div>
+                    <strong>Department ID assigned is: </strong> @Model.DeptId
+                </div>
+            }
+            else if (ViewBag.MaxDeptId != null)
+            {
+                <div>
+                    <strong>Department ID will be assigned as: </strong> @ViewBag.MaxDeptId 
+                </div>
+            }
+
+            @Html.HiddenFor(model => model.DeptId)
+
+            <table class="table">
+                <tr>
+                    <td>
+                        @Html.LabelFor(model => model.DeptName)
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.DeptName, new { @class = "form-control", type = "text", @pattern = "[A-Za-z  ]*" })
+                        @Html.ValidationMessageFor(model => model.DeptName)
+                    </td>
+                </tr>
+            </table>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+        }
+    </div>
+</body>
+</html>

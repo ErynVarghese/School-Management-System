@@ -1,0 +1,97 @@
+﻿@model IEnumerable<SMS.Models.Student>
+
+@{
+    Layout = "~/Views/Shared/Layout2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EmpList</title>
+</head>
+<body>
+    <div>
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>}
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>}
+
+        <h2>Student List</h2>
+        <div>@Html.ActionLink("New", "AddStud", "StudCRUD")</div>
+
+        @using (Html.BeginForm("StudList", "StudCRUD", FormMethod.Get))
+        {
+
+            <table>
+                <tr>
+                    <td>
+                        @Html.Label("Select Student Name")
+                    </td>
+                    <td>
+                        @Html.DropDownList("searchedname", (SelectList)ViewBag.StudList, "Select a Student", new { @class = "form-control" })
+                    </td>
+                </tr>
+
+
+            </table>
+
+            <button type="submit" class="btn btn-primary">Search</button>}
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Student Name</th>
+                    <th>DOB</th>
+                    <th> Class Id </th>
+                    <th>Section Id</th>
+                    <th>Father Name</th>
+                    <th>Contact No</th>
+                    <th>Address</th>
+                    <th>Student Fee</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var stud in Model)
+                {
+                <tr>
+
+                    <td>@Html.DisplayFor(modelItem => stud.StudentId)</td>
+                    <td>@Html.DisplayFor(modelItem => stud.StudentName)</td>
+
+                    <td>@(stud.DOB.HasValue ? stud.DOB.Value.ToString("dd-MM-yyyy") : "")</td>
+                    <td>@Html.DisplayFor(modelItem => stud.ClassId)</td>
+                    <td>@Html.DisplayFor(modelItem => stud.SectionId)</td>
+                    <td>@Html.DisplayFor(modelItem => stud.FatherName)</td>
+                    <td>@Html.DisplayFor(modelItem => stud.ContactNo)</td>
+                    <td>@Html.DisplayFor(modelItem => stud.StudentAddress)</td>
+                    <td>@Html.DisplayFor(modelItem => stud.StudentFee)</td>
+
+                    <td>
+                        <a href="@Url.Action("AddStud", "StudCRUD", new { id = stud.StudentId })"> Edit </a>
+                        <a href="@Url.Action("DeleteStud", "StudCRUD", new { id = stud.StudentId })"> Delete </a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (Session["UserType"] != null)
+        {
+            if (Session["UserType"].ToString() == "Admin")
+            {
+                @Html.ActionLink("Go back to Main Page", "MainPage", "Login", null, new { @class = "btn btn-danger" })
+            }
+            else if (Session["UserType"].ToString() == "Student")
+            {
+                @Html.ActionLink("Logout", "Logout", "Login", null, new { @class = "btn btn-danger" })
+            }
+        }
+    </div>
+</body>
+</html>

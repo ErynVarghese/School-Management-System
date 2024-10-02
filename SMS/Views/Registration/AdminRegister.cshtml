@@ -1,0 +1,72 @@
+﻿@model SMS.Models.Admin
+
+@{
+    Layout = "~/Views/Shared/Layout2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AdminRegister</title>
+</head>
+<body>
+    <div>
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>}
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>}
+        <h2>Register</h2>
+
+        @using (Html.BeginForm("AdminRegister", "Registration", FormMethod.Post))
+        {
+            <div>
+                <label>Your assigned Employee ID: @ViewBag.MaxAdminId</label>
+            </div>
+
+            <table class="table">
+                <tr>
+                    <td>
+                        @Html.LabelFor(m => m.AdminUsername)
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.AdminUsername, new { @class = "form-control", type = "text", @pattern = "[A-Za-z  ]*" })
+                        @Html.ValidationMessageFor(m => m.AdminUsername)
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        @Html.LabelFor(m => m.AdminName)
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.AdminName, new { @class = "form-control", type = "text", @pattern = "[A-Za-z  ]*" })
+                        @Html.ValidationMessageFor(m => m.AdminName)
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        @Html.LabelFor(m => m.AdminPassword)
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.AdminPassword, new { @class = "form-control" , @type = "number"})
+                        @Html.ValidationMessageFor(m => m.AdminPassword)
+                    </td>
+                </tr>
+
+
+
+            </table>
+
+            <button type="submit" class="btn btn-primary"> Register </button>
+        }
+
+
+    </div>
+</body>
+</html>
