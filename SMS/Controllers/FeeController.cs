@@ -242,10 +242,6 @@ namespace SMS.Controllers
                         }
                         else
                         {
-
-
-
-
                             cmd = new SqlCommand("proc_fee", con);
                             cmd.CommandType = CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@ClassId", f.ClassId);

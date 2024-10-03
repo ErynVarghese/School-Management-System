@@ -68,6 +68,8 @@ namespace SMS.Repositories
 
         try
         {
+                con.Open();
+
                 cmd = new SqlCommand("proc_emp", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@EmpName", obj.EmpName);
@@ -112,6 +114,7 @@ namespace SMS.Repositories
         try
         {
                 con.Open();
+
                 cmd = new SqlCommand("proc_emp", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@EmpId", obj.EmpId);
@@ -160,6 +163,7 @@ namespace SMS.Repositories
         try
         {
             con.Open();
+
             cmd = new SqlCommand("proc_emp", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@EmpId", Id);
@@ -199,6 +203,7 @@ namespace SMS.Repositories
         try
         {
                 con.Open();
+
                 cmd = new SqlCommand("proc_emp", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@EmpId", Id);

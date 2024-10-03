@@ -98,6 +98,8 @@ namespace SMS.Repositories
 
             try
             {
+                con.Open();
+
                 cmd = new SqlCommand("proc_section", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@SectionId", obj.SectionId);
@@ -181,6 +183,7 @@ namespace SMS.Repositories
             try
             {
                 con.Open();
+
                 cmd = new SqlCommand("proc_section", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@SectionId", Id);

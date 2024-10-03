@@ -101,6 +101,8 @@ namespace SMS.Repositories
 
             try
             {
+                con.Open();
+
                 cmd = new SqlCommand("proc_fee", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@FeeId", obj.FeeId);

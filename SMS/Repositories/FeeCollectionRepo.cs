@@ -10,50 +10,40 @@ using System.Configuration;
 
 namespace SMS.Repositories
 {
-
-    public class StudentRepo : ICommon<Student>
+    public class FeeCollectionRepo : ICommon<FeeCollection>
     {
+
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["sms"].ConnectionString);
         SqlCommand cmd = null;
 
-        public List<Student> GetAll()
+        public List<FeeCollection> GetAll()
         {
-            List<Student> studlist = new List<Student>();
+            List<FeeCollection> feecollist = new List<FeeCollection>();
 
             try
             {
                 con.Open();
-                cmd = new SqlCommand("proc_student", con);
-
-
+                cmd = new SqlCommand("proc_feecol", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-
                 cmd.Parameters.AddWithValue("@Mode", 0);
-
                 SqlDataReader sdr = cmd.ExecuteReader();
 
                 while (sdr.Read())
                 {
+                    FeeCollection f = new FeeCollection();
+                    f.FeeColId = sdr.GetInt32(0);
+                    f.StudentId = sdr.GetInt32(1);
+                    f.ClassId = sdr.GetInt32(2);
+                    f.Installment1 = sdr.GetString(3);
+                    f.Installment2 = sdr.GetString(4);
+                    f.Installment3 = sdr.GetString(5);
+                    f.FeeStatus = sdr.GetString(6);
 
-                    Student stud = new Student();
-
-                    stud.StudentId = sdr.GetInt32(0);
-                    stud.StudentName = sdr.GetString(1);
-                    stud.DOB = sdr.GetDateTime(2);
-                    stud.ClassId = sdr.GetInt32(3);
-                    stud.SectionId = sdr.GetInt32(4);
-                    stud.FatherName = sdr.GetString(5);
-                    stud.ContactNo = sdr.GetInt32(6);
-                    stud.StudentAddress = sdr.GetString(7);
-                    stud.StudentUsername = sdr.GetString(8);
-                    stud.StudentPassword = sdr.GetInt32(9);
-                    stud.StudentFee = sdr.GetDecimal(10);
-
-                    studlist.Add(stud);
+                    feecollist.Add(f);
                 }
             }
             catch (Exception ex)
-            { 
+            {
                 con.Close();
                 throw ex.InnerException;
             }
@@ -62,37 +52,34 @@ namespace SMS.Repositories
                 con.Close();
             }
 
-            return studlist;
+            return feecollist;
         }
 
-        public string Create (Student obj)
+        public string Create(FeeCollection obj)
         {
             string result = string.Empty;
 
             try
             {
                 con.Open();
-                cmd = new SqlCommand("proc_student", con);
+
+                cmd = new SqlCommand("proc_feecol", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@StudentName", obj.StudentName);
-                cmd.Parameters.AddWithValue("@DOB", obj.DOB);
+                cmd.Parameters.AddWithValue("@StudentId", obj.StudentId);
                 cmd.Parameters.AddWithValue("@ClassId", obj.ClassId);
-                cmd.Parameters.AddWithValue("@SectionId", obj.SectionId);
-                cmd.Parameters.AddWithValue("@FatherName", obj.FatherName);
-                cmd.Parameters.AddWithValue("@ContactNo", obj.ContactNo);
-                cmd.Parameters.AddWithValue("@StudentAddress", obj.StudentAddress);
-                cmd.Parameters.AddWithValue("@StudentUsername", obj.StudentUsername);
-                cmd.Parameters.AddWithValue("@StudentPassword", obj.StudentPassword);
-                cmd.Parameters.AddWithValue("@StudentFee", obj.StudentFee);
+                cmd.Parameters.AddWithValue("@Installment1", obj.Installment1);
+                cmd.Parameters.AddWithValue("@Installment2", obj.Installment2);
+                cmd.Parameters.AddWithValue("@Intallment3", obj.Installment3);
+                cmd.Parameters.AddWithValue("@FeeStatus", obj.FeeStatus);
                 cmd.Parameters.AddWithValue("@Mode", 2);
-                
+
                 int status = cmd.ExecuteNonQuery();
-                
+
                 if (status <= 0)
                 {
                     result = "Success";
                 }
-                
+
                 else
                 {
                     result = "Fail";
@@ -108,10 +95,11 @@ namespace SMS.Repositories
             {
                 con.Close();
             }
+
             return result;
         }
 
-        public string Update (Student obj)
+        public string Update(FeeCollection obj)
         {
             string result = string.Empty;
 
@@ -119,19 +107,15 @@ namespace SMS.Repositories
             {
                 con.Open();
 
-                cmd = new SqlCommand("proc_student", con);
+                cmd = new SqlCommand("proc_feecol", con);
                 cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@FeeColId", obj.FeeColId);
                 cmd.Parameters.AddWithValue("@StudentId", obj.StudentId);
-                cmd.Parameters.AddWithValue("@StudentName", obj.StudentName);
-                cmd.Parameters.AddWithValue("@DOB", obj.DOB);
                 cmd.Parameters.AddWithValue("@ClassId", obj.ClassId);
-                cmd.Parameters.AddWithValue("@SectionId", obj.SectionId);
-                cmd.Parameters.AddWithValue("@FatherName", obj.FatherName);
-                cmd.Parameters.AddWithValue("@ContactNo", obj.ContactNo);
-                cmd.Parameters.AddWithValue("@StudentAddress", obj.StudentAddress);
-                cmd.Parameters.AddWithValue("@StudentUsername", obj.StudentUsername);
-                cmd.Parameters.AddWithValue("@StudentPassword", obj.StudentPassword);
-                cmd.Parameters.AddWithValue("@StudentFee", obj.StudentFee);
+                cmd.Parameters.AddWithValue("@Installment1", obj.Installment1);
+                cmd.Parameters.AddWithValue("@Installment2", obj.Installment2);
+                cmd.Parameters.AddWithValue("@Intallment3", obj.Installment3);
+                cmd.Parameters.AddWithValue("@FeeStatus", obj.FeeStatus);
                 cmd.Parameters.AddWithValue("@Mode", 3);
 
                 int status = cmd.ExecuteNonQuery();
@@ -169,13 +153,10 @@ namespace SMS.Repositories
             try
             {
                 con.Open();
-                cmd = new SqlCommand("proc_student", con);
 
-
+                cmd = new SqlCommand("proc_feecol", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-
-
-                cmd.Parameters.AddWithValue("@StudentId", Id);
+                cmd.Parameters.AddWithValue("@FeeColId", Id);
                 cmd.Parameters.AddWithValue("@Mode", 4);
 
                 int status = cmd.ExecuteNonQuery();
@@ -202,43 +183,38 @@ namespace SMS.Repositories
             }
 
             return result;
-
         }
 
 
-        public Student GetById(int Id = 0)
+        public FeeCollection GetById(int Id = 0)
         {
-            Student obj = new Student();
+            FeeCollection obj = new FeeCollection();
 
             try
             {
                 con.Open();
-                cmd = new SqlCommand("proc_student", con);
+                cmd = new SqlCommand("proc_feecol", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@StudentId", Id);
+                cmd.Parameters.AddWithValue("@FeeColId", Id);
                 cmd.Parameters.AddWithValue("@Mode", 1);
 
                 SqlDataReader sdr = cmd.ExecuteReader();
 
                 if (sdr.Read())
                 {
-                    obj.StudentId = sdr.GetInt32(0);
-                    obj.StudentName = sdr.GetString(1);
-                    obj.DOB = sdr.GetDateTime(2);
-                    obj.ClassId = sdr.GetInt32(3);
-                    obj.SectionId = sdr.GetInt32(4);
-                    obj.FatherName = sdr.GetString(5);
-                    obj.ContactNo = sdr.GetInt32(6);
-                    obj.StudentAddress = sdr.GetString(7);
-                    obj.StudentUsername = sdr.GetString(8);
-                    obj.StudentPassword = sdr.GetInt32(9);
-                    obj.StudentFee = sdr.GetDecimal(10);
+                    obj.FeeColId = sdr.GetInt32(0);
+                    obj.StudentId = sdr.GetInt32(1);
+                    obj.ClassId = sdr.GetInt32(2);
+                    obj.Installment1 = sdr.GetString(3);
+                    obj.Installment2 = sdr.GetString(4);
+                    obj.Installment3 = sdr.GetString(5);
+                    obj.FeeStatus = sdr.GetString(6);
                 }
-            } 
-            catch(Exception ex) 
+            }
+            catch (Exception ex)
             {
-               con.Close();
-            throw ex.InnerException;
+                con.Close();
+                throw ex.InnerException;
             }
             finally
             {
