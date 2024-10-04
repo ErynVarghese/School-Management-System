@@ -30,6 +30,8 @@ namespace SMS.Controllers
             sectionlist = sectionRepo.GetAll();
             ViewBag.SectionList = sectionlist;
 
+            ViewBag.MaxStudId = studrepo.GetNextId();
+
         }
 
 
@@ -119,13 +121,7 @@ namespace SMS.Controllers
             return Json(classFee, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
-        public JsonResult GetNextStudentId()
-        {
 
-            int nextid = studrepo.GetNextId();
-            return Json(nextid, JsonRequestBehavior.AllowGet);
-        }
 
         public ActionResult DeleteStud(int id)
         {
