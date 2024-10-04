@@ -9,7 +9,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AddEmp</title>
+    <title>Add Student</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
 </head>
@@ -28,100 +28,69 @@
 
         <h2> Add Student </h2>
 
-        @using (Html.BeginForm("AddStud", "StudCRUD", FormMethod.Post))
+        @using (Html.BeginForm("AddStud", "StudCRUD", FormMethod.Post, new { id = "studentForm" }))
         {
-            if (Model.StudentId > 0)
-            {
-                <div>
-                    <strong>Student ID assigned is: </strong> @Model.StudentId
-                </div>
-            }
-            else if (ViewBag.MaxStudId != null)
-            {
-                <div>
-                    <strong>Student ID will be assigned as: </strong> @ViewBag.MaxStudId
-                </div>
-            }
-
-            @Html.HiddenFor(model => model.StudentId)
-
-            @Html.HiddenFor(model => model.SectionId)
-
-
-            <table class="table">
-                <tr>
-                    <td>
-                        @Html.LabelFor(m => m.ClassId, "Select Class")
-                    </td>
-                    <td>
-                        @Html.DropDownList("ClassId", (SelectList)ViewBag.ClassList, "Select Class",
-                            new { @class = "form-control", onchange = "this.form.submit();" })
-                        <!-- Hidden field to indicate class selection -->
-                        @Html.Hidden("IsClassSelection", "true")
-                        @Html.ValidationMessageFor(model => model.ClassId)
-                    </td>
-                </tr>
-            </table>
-
-            <input type="hidden" name="actionType" value="SelectClass" />
-            @Html.HiddenFor(m => m.StudentName)
-            @Html.HiddenFor(m => m.DOB)
-            @Html.HiddenFor(m => m.FatherName)
-            @Html.HiddenFor(m => m.ContactNo)
-            @Html.HiddenFor(m => m.StudentAddress)
-            @Html.HiddenFor(m => m.StudentUsername)
-            @Html.HiddenFor(m => m.StudentPassword)
-            @Html.HiddenFor(m => m.StudentFee)
-
-        }
-
-        @using (Html.BeginForm("AddStud", "StudCRUD", FormMethod.Post))
-        {
-            @Html.HiddenFor(model => model.StudentId)
-
-            @Html.HiddenFor(m => m.ClassId)
-
+           
 
             <table class="table">
 
-
-                <tr>
+               <tr>
                     <td>
-                        @Html.LabelFor(m => m.SectionId, "Select Section")
+                        @Html.LabelFor(m => m.StudentId)
                     </td>
                     <td>
-                        @Html.DropDownList("SectionId",
-                            (SelectList)(ViewBag.SectionList != null ? ViewBag.SectionList : new SelectList(Enumerable.Empty<SelectListItem>())),
-                            "Select Section",
-                            new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.SectionId)
+                        @Html.TextBoxFor(model => model.StudentId, new { @class = "form-control",  type = "number",
+                       @readonly = "readonly", @id = "StudentId"})
+
+                        @Html.ValidationMessageFor(model => model.StudentId)
                     </td>
                 </tr>
 
-                <tr>
+
+                 <tr>
                     <td>
                         @Html.LabelFor(model => model.StudentName)
                     </td>
                     <td>
-                        @Html.TextBoxFor(model => model.StudentName, new { @class = "form-control", type = "text", @pattern = "[A-Za-z  ]*" })
+                        @Html.TextBoxFor(model => model.StudentName, new { @class = "form-control", type = "text", @pattern = "[A-Za-z ]*" })
                         @Html.ValidationMessageFor(model => model.StudentName)
                     </td>
                 </tr>
 
 
-                <tr>
+             <tr>
                     <td>
                         @Html.LabelFor(model => model.DOB)
                     </td>
                     <td>
                         @Html.TextBoxFor(model => model.DOB, new { @class = "form-control datepicker", @id = "txtDate", @value = "" })
                         @Html.ValidationMessageFor(model => model.DOB)
-
                     </td>
                 </tr>
 
+                
 
+                <tr>
+                    <td>
+                        @Html.LabelFor(m => m.ClassId, "Select Class")
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(model => model.ClassId, new SelectList(ViewBag.ClassList, "ClassId", "ClassName"), 
+                        "-- Select --", new { @class = "form-control", @id = "classDropdown" })
+                        @Html.ValidationMessageFor(model => model.ClassId)
+                    </td>
+                </tr>
 
+                <tr>
+                    <td>
+                        @Html.LabelFor(m => m.SectionId, "Select Section")
+                    </td>
+                    <td>
+                       @Html.DropDownListFor(model => model.SectionId, new SelectList(ViewBag.SectionList, "SectionId", "SectionName"), 
+                        "-- Select --", new { @class = "form-control", @id = "sectionDropdown" })
+                        @Html.ValidationMessageFor(model => model.SectionId)
+                    </td>
+                </tr>
 
 
                 <tr>
@@ -129,14 +98,12 @@
                         @Html.LabelFor(model => model.FatherName)
                     </td>
                     <td>
-                        @Html.TextBoxFor(model => model.FatherName, new { @class = "form-control", type = "text", @pattern = "[A-Za-z  ]*" })
+                        @Html.TextBoxFor(model => model.FatherName, new { @class = "form-control", type = "text", @pattern = "[A-Za-z ]*" })
                         @Html.ValidationMessageFor(model => model.FatherName)
-
                     </td>
                 </tr>
 
-
-                <tr>
+                 <tr>
                     <td>
                         @Html.LabelFor(model => model.ContactNo)
                     </td>
@@ -180,38 +147,92 @@
                     </td>
                 </tr>
 
+
+
                 <tr>
                     <td>
                         @Html.LabelFor(m => m.StudentFee, "Class Fee")
                     </td>
                     <td>
-                        @Html.TextBoxFor(model => model.StudentFee, new { @class = "form-control", @readonly = "readonly" })
+                        @Html.TextBoxFor(model => model.StudentFee, new { @class = "form-control", @readonly = "readonly" , @id = "StudentFee" })
                         @Html.ValidationMessageFor(model => model.StudentFee)
                     </td>
                 </tr>
 
-
             </table>
-            <input type="hidden" name="actionType" value="Register" />
-            <button type="submit" class="btn btn-primary">Save</button>
 
+            <button type="submit" class="btn btn-primary">Save</button>
         }
 
     </div>
 
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+
     <script>
         $(document).ready(function () {
             $('.datepicker').datepicker({
                 format: 'dd/mm/yyyy',
-
             });
-        });
-    </script>
 
+        $.ajax({
+        url: '@Url.Action("GetNextStudentId", "StudCRUD")',
+        type: 'GET',
+        success: function (studentId) {
+            $('#StudentId').val(studentId);
+        },
+        error: function () {
+            alert('Error fetching StudentId.');
+            }
+        });
+
+
+        $('#classDropdown').change(function () {
+            var classId = $(this).val();
+            if (classId) {
+                
+                $.ajax({
+                    url: '@Url.Action("GetSectionsByClassId", "StudCRUD")',
+                    type: 'GET',
+                    data: { classId: classId },
+                    success: function (data) {
+                        
+                        $('#sectionDropdown').empty();
+                        $.each(data, function (index, item) {
+                            $('#sectionDropdown').append('<option value="' + item.SectionId + '">' + item.SectionName + '</option>');
+                        });
+                    },
+                    error: function () {
+                        alert('Error loading sections.');
+                    }
+                });
+
+                
+                $.ajax({
+                    url: '@Url.Action("GetClassFeeById", "StudCRUD")', 
+                    type: 'GET',
+                    data: { classId: classId },
+                    success: function (feeData) {
+                        
+                        $('#StudentFee').val(feeData); 
+                    },
+                    error: function () {
+                        alert('Error fetching fee.');
+                    }
+                });
+
+            } else {
+              
+                $('#sectionDropdown').empty();
+                $('#sectionDropdown').append('<option>Select Section</option>');
+
+                
+                $('#StudentFee').val('');
+            }
+        });
+    });
+    </script>
 
 </body>
 </html>

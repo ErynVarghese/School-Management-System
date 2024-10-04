@@ -144,9 +144,12 @@
     <Compile Include="Models\Section.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AdminRepo.cs" />
     <Compile Include="Repositories\ClassRepo.cs" />
     <Compile Include="Repositories\DepartmentRepo.cs" />
     <Compile Include="Repositories\EmployerRepo.cs" />
+    <Compile Include="Repositories\FeeCollectionRepo.cs" />
+    <Compile Include="Repositories\FeeStructureRepo.cs" />
     <Compile Include="Repositories\ICommon.cs" />
     <Compile Include="Repositories\SectionRepo.cs" />
     <Compile Include="Repositories\StudentRepo.cs" />

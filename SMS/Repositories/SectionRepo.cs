@@ -210,5 +210,74 @@ namespace SMS.Repositories
 
             return obj;
         }
+
+        public int GetNextId()
+        {
+            int NextId = 0;
+
+            try
+            {
+                cmd = new SqlCommand("proc_section", con);
+                con.Open();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Mode", 5);
+
+                SqlDataReader sdr = cmd.ExecuteReader();
+
+                if (sdr.Read())
+                {
+                    NextId = sdr.GetInt32(0);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                con.Close();
+                throw ex.InnerException;
+            }
+
+            finally
+            {
+                con.Close();
+            }
+
+            return NextId;
+        }
+
+
+        internal List<Section> GetSectionsByClassId(int Id)
+        {
+            List<Section> sList = new List<Section>();
+
+            try
+            {
+                con.Open();
+                cmd = new SqlCommand("proc_section", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ClassId", Id);
+                cmd.Parameters.AddWithValue("@Mode", 6);
+
+                SqlDataReader sdr = cmd.ExecuteReader();
+
+                while (sdr.Read())
+                {
+                    Section obj = new Section();
+                    obj.SectionId = sdr.GetInt32(0);
+                    obj.SectionName = sdr.GetString(1);
+                    sList.Add(obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+            return sList;
+        }
+
     }
 }

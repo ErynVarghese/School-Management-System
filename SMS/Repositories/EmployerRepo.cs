@@ -236,5 +236,39 @@ namespace SMS.Repositories
 
         return obj;
     }
-  }
+
+        public int GetNextId()
+        {
+            int NextId = 0;
+
+            try
+            {
+                cmd = new SqlCommand("proc_emp", con);
+                con.Open();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Mode", 5);
+
+                SqlDataReader sdr = cmd.ExecuteReader();
+
+                if (sdr.Read())
+                {
+                    NextId = sdr.GetInt32(0);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                con.Close();
+                throw ex.InnerException;
+            }
+
+            finally
+            {
+                con.Close();
+            }
+
+            return NextId;
+        }
+
+    }
 }

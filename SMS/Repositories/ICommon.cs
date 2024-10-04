@@ -16,5 +16,7 @@ namespace SMS.Repositories
         string Delete(int Id);
 
         T GetById(int Id);
+
+        int GetNextId();
     }
 }
