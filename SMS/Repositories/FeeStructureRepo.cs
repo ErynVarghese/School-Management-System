@@ -284,5 +284,54 @@ namespace SMS.Repositories
 
             return fee;
         }
+
+
+        public string UpdateById(int classid)
+        {
+            string result = string.Empty;
+
+            try
+            {
+                con.Open();
+
+                cmd = new SqlCommand("proc_fee", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@FeeId", obj.FeeId);
+                cmd.Parameters.AddWithValue("@ClassId", obj.ClassId);
+                cmd.Parameters.AddWithValue("@TotalFee", obj.TotalFee);
+                cmd.Parameters.AddWithValue("@Installment1", obj.Installment1);
+                cmd.Parameters.AddWithValue("@Installment2", obj.Installment2);
+                cmd.Parameters.AddWithValue("@Installment3", obj.Installment3);
+                cmd.Parameters.AddWithValue("@Mode", 3);
+
+                int status = cmd.ExecuteNonQuery();
+
+                if (status <= 0)
+                {
+                    result = "Success";
+                }
+
+                else
+                {
+                    result = "Fail";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return result;
+
+        }
+
+
+
     }
 }

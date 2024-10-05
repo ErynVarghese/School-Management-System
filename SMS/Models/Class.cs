@@ -11,7 +11,7 @@ namespace SMS.Models
 
        
 
-        public int? ClassId { get; set; }
+        public int ClassId { get; set; }
 
         [Required(ErrorMessage = "ClassName is required.")]
         public string ClassName { get; set; }

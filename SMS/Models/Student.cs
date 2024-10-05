@@ -9,7 +9,7 @@ namespace SMS.Models
     public class Student
     {
     
-        public int? StudentId { get; set; }
+        public int StudentId { get; set; }
 
         [Required(ErrorMessage = "StudentName is required.")]
         public string StudentName { get; set; }
