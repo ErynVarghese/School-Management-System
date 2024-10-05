@@ -31,7 +31,7 @@ namespace SMS.Controllers
         }
 
 
-        public ActionResult ClassList(string searchedname)
+        public ActionResult ClassList()
         {
             List<Class> clist = new List<Class>();
 
@@ -60,7 +60,7 @@ namespace SMS.Controllers
         [HttpPost]
         public ActionResult AddClass(Class cl)
         {
-            List<Class> clist = new List<Class>();
+            
 
             if (ModelState.IsValid)
             {

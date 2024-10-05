@@ -14,8 +14,6 @@ namespace SMS.Controllers
     {
         // GET: Registration
 
-        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["sms"].ConnectionString);
-        SqlCommand cmd = null;
 
         public ActionResult EmpRegister()
         {

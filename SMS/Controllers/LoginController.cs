@@ -7,15 +7,17 @@ using SMS.Models;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using SMS.Repositories;
 
 namespace SMS.Controllers
 {
     public class LoginController : Controller
     {
         // GET: Login
+        EmployerRepo emprepo = new EmployerRepo();
+        StudentRepo studrepo = new StudentRepo();
+        AdminRepo adminrepo = new AdminRepo();
 
-        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["sms"].ConnectionString);
-        SqlCommand cmd = null;
 
         [HttpGet]
         public ActionResult GetUserType()
@@ -30,6 +32,7 @@ namespace SMS.Controllers
             if (type == "Employer")
             {
                 return RedirectToAction("EmpAuthentication", "Login");
+
             } else if (type == "Student")
             {
                 return RedirectToAction("StudAuthentication", "Login");
@@ -57,23 +60,10 @@ namespace SMS.Controllers
 
             try
             {
-                con.Open();
-
-                cmd = new SqlCommand("proc_emp", con);
-
-
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@EmpUsername", username);
-                cmd.Parameters.AddWithValue("@Mode", 6);
+                DataSet ds = emprepo.GetByUsername(username);
 
                 bool checkusername = false;
                 bool checkpassword = false;
-
-                SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                DataSet ds = new DataSet();
-
-                sda.Fill(ds);
 
 
                 if (ds.Tables[0].Rows.Count > 0)
@@ -93,38 +83,20 @@ namespace SMS.Controllers
 
                 }
 
-                con.Close();
-
 
 
                 if (checkusername && checkpassword)
                 {
-                    Session["EmpId"] = emp.EmpId;
-
-                    con.Open();
-
-                    SqlCommand cmdemp = new SqlCommand("proc_emp", con);
-
-                    cmdemp.CommandType = CommandType.StoredProcedure;
-
-                    cmdemp.Parameters.AddWithValue("@EmpUsername", username);
-                    cmdemp.Parameters.AddWithValue("@Mode", 6);
-
-                    SqlDataReader sdr = cmdemp.ExecuteReader();
-
-                    while (sdr.Read())
-                    {
-                        Session["UserType"] = "Employer";
-                        Session["EmpId"] = sdr.GetInt32(0);
-                        Session["EmpName"] = sdr.GetString(1);
-                        Session["ContactNo"] = sdr.GetInt32(2);
-                        Session["Email"] = sdr.GetString(3);
-                        Session["DOB"] = sdr.GetDateTime(4);
-                        Session["DeptId"] = sdr.GetInt32(5);
-                        Session["DOJ"] = sdr.GetDateTime(6);
-                        Session["EmpUsername"] = sdr.GetString(7);
-                        Session["EmpPassword"] = sdr.GetInt32(8);
-                    }
+                    Session["UserType"] = "Employer";
+                    Session["EmpId"] = Convert.ToInt32(ds.Tables[0].Rows[0]["EmpId"]);
+                    Session["EmpName"] = ds.Tables[0].Rows[0]["EmpName"].ToString();
+                    Session["ContactNo"] = Convert.ToInt32(ds.Tables[0].Rows[0]["ContactNo"]);
+                    Session["Email"] = ds.Tables[0].Rows[0]["Email"].ToString();
+                    Session["DOB"] = Convert.ToDateTime(ds.Tables[0].Rows[0]["DOB"]);
+                    Session["DeptId"] = Convert.ToInt32(ds.Tables[0].Rows[0]["DeptId"]);
+                    Session["DOJ"] = Convert.ToDateTime(ds.Tables[0].Rows[0]["DOJ"]);
+                    Session["EmpUsername"] = ds.Tables[0].Rows[0]["EmpUsername"].ToString();
+                    Session["EmpPassword"] = Convert.ToInt32(ds.Tables[0].Rows[0]["EmpPassword"]);
 
                     TempData["Success"] = "Login Successfull";
                     return RedirectToAction("EmpList", "EmpCRUD");
@@ -146,11 +118,11 @@ namespace SMS.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = "Error in Processing the request. " + ex.Message;
-                con.Close();
+               
             }
             finally
             {
-                con.Close();
+                
             }
 
             return View();
@@ -171,23 +143,11 @@ namespace SMS.Controllers
 
             try
             {
-                con.Open();
-
-                cmd = new SqlCommand("proc_student", con);
-
-
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@StudentUsername", username);
-                cmd.Parameters.AddWithValue("@Mode", 6);
+                DataSet ds = studrepo.GetByUsername(username);
 
                 bool checkusername = false;
                 bool checkpassword = false;
 
-                SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                DataSet ds = new DataSet();
-
-                sda.Fill(ds);
 
 
                 if (ds.Tables[0].Rows.Count > 0)
@@ -207,39 +167,22 @@ namespace SMS.Controllers
 
                 }
 
-                con.Close();
-
-
 
                 if (checkusername && checkpassword)
-                {
-                    Session["StudentId"] = stud.StudentId;
+                { 
 
-                    con.Open();
+                    Session["UserType"] = "Student";
+                    Session["StudentId"] = Convert.ToInt32(ds.Tables[0].Rows[0]["StudentId"]);
+                    Session["StudentName"] = ds.Tables[0].Rows[0]["StudentName"].ToString();
+                    Session["DOB"] = Convert.ToDateTime(ds.Tables[0].Rows[0]["DOB"]);
+                    Session["ClassId"] = Convert.ToInt32(ds.Tables[0].Rows[0]["ClassId"]);
+                    Session["SectionId"] = Convert.ToInt32(ds.Tables[0].Rows[0]["SectionId"]);
+                    Session["FatherName"] = ds.Tables[0].Rows[0]["FatherName"].ToString();
+                    Session["ContactNo"] = Convert.ToInt32(ds.Tables[0].Rows[0]["ContactNo"]);
+                    Session["StudentAddress"] = ds.Tables[0].Rows[0]["StudentAddress"].ToString();
+                    Session["StudentUsername"] = ds.Tables[0].Rows[0]["StudentUsername"].ToString();
+                    Session["StudentPassword"] = Convert.ToInt32(ds.Tables[0].Rows[0]["StudentPassword"]);
 
-                    SqlCommand cmdstud = new SqlCommand("proc_student", con);
-
-                    cmdstud.CommandType = CommandType.StoredProcedure;
-
-                    cmdstud.Parameters.AddWithValue("@StudentUsername", username);
-                    cmdstud.Parameters.AddWithValue("@Mode", 6);
-
-                    SqlDataReader sdr = cmdstud.ExecuteReader();
-
-                    while (sdr.Read())
-                    {
-                        Session["UserType"] = "Student";
-                        Session["StudentId"] = sdr.GetInt32(0);
-                        Session["StudentName"] = sdr.GetString(1);
-                        Session["DOB"] = sdr.GetDateTime(2);
-                        Session["ClassId"] = sdr.GetInt32(3);
-                        Session["SectionId"] = sdr.GetInt32(4);
-                        Session["FatherName"] = sdr.GetString(5);
-                        Session["ContactNo"] = sdr.GetInt32(6);
-                        Session["StudentAddress"] = sdr.GetString(7);
-                        Session["StudentUsername"] = sdr.GetString(8);
-                        Session["StudentPassword"] = sdr.GetInt32(9);
-                    }
 
                     TempData["Success"] = "Login Successfull";
                     return RedirectToAction("StudList", "StudCRUD");
@@ -261,11 +204,11 @@ namespace SMS.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = "Error in Processing the request. " + ex.Message;
-                con.Close();
+                
             }
             finally
             {
-                con.Close();
+
             }
 
             return View();
@@ -285,23 +228,11 @@ namespace SMS.Controllers
 
             try
             {
-                con.Open();
 
-                cmd = new SqlCommand("proc_admin", con);
-
-
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@AdminUsername", username);
-                cmd.Parameters.AddWithValue("@Mode", 6);
+                DataSet ds = adminrepo.GetByUsername(username);
 
                 bool checkusername = false;
                 bool checkpassword = false;
-
-                SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                DataSet ds = new DataSet();
-
-                sda.Fill(ds);
 
 
                 if (ds.Tables[0].Rows.Count > 0)
@@ -321,34 +252,13 @@ namespace SMS.Controllers
 
                 }
 
-                con.Close();
-
-
-
                 if (checkusername && checkpassword)
                 {
-                    Session["AdminId"] = adm.AdminId;
-
-                    con.Open();
-
-                    SqlCommand cmdemp = new SqlCommand("proc_admin", con);
-
-                    cmdemp.CommandType = CommandType.StoredProcedure;
-
-                    cmdemp.Parameters.AddWithValue("@AdminUsername", username);
-                    cmdemp.Parameters.AddWithValue("@Mode", 6);
-
-                    SqlDataReader sdr = cmdemp.ExecuteReader();
-
-                    while (sdr.Read())
-                    {
-                        Session["UserType"] = "Admin";
-                        Session["AdminId"] = sdr.GetInt32(0);
-                        Session["AdminUsername"] = sdr.GetString(1);
-                        Session["AdminName"] = sdr.GetString(2);
-                        Session["AdminPassword"] = sdr.GetInt32(3);
-
-                    }
+                    Session["UserType"] = "Admin";
+                    Session["AdminId"] = Convert.ToInt32(ds.Tables[0].Rows[0]["AdminId"]);
+                    Session["AdminUsername"] = ds.Tables[0].Rows[0]["AdminUsername"].ToString();
+                    Session["AdminName"] = ds.Tables[0].Rows[0]["AdminName"].ToString();
+                    Session["AdminPassword"] = Convert.ToInt32(ds.Tables[0].Rows[0]["AdminPassword"]);
 
                     TempData["Success"] = "Login Successfull";
                     return RedirectToAction("MainPage", "Login");
@@ -369,11 +279,11 @@ namespace SMS.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = "Error in Processing the request. " + ex.Message;
-                con.Close();
+         
             }
             finally
             {
-                con.Close();
+               
             }
 
             return View();

@@ -286,7 +286,7 @@ namespace SMS.Repositories
         }
 
 
-        public string UpdateById(int classid)
+        internal string UpdateById(Class cl)
         {
             string result = string.Empty;
 
@@ -296,13 +296,28 @@ namespace SMS.Repositories
 
                 cmd = new SqlCommand("proc_fee", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@FeeId", obj.FeeId);
-                cmd.Parameters.AddWithValue("@ClassId", obj.ClassId);
-                cmd.Parameters.AddWithValue("@TotalFee", obj.TotalFee);
-                cmd.Parameters.AddWithValue("@Installment1", obj.Installment1);
-                cmd.Parameters.AddWithValue("@Installment2", obj.Installment2);
-                cmd.Parameters.AddWithValue("@Installment3", obj.Installment3);
-                cmd.Parameters.AddWithValue("@Mode", 3);
+                cmd.Parameters.AddWithValue("@ClassId", cl.ClassId);
+                cmd.Parameters.AddWithValue("@TotalFee", cl.ClassFee);
+
+                if (cl.InstallmentNo == 1)
+                {
+                    cmd.Parameters.AddWithValue("@Installment1", cl.ClassFee);
+                    cmd.Parameters.AddWithValue("@Installment2", 0);
+                    cmd.Parameters.AddWithValue("@Installment3", 0);
+                }
+                else if (cl.InstallmentNo == 2)
+                {
+                    cmd.Parameters.AddWithValue("@Installment1", (cl.ClassFee) / 2);
+                    cmd.Parameters.AddWithValue("@Installment2", (cl.ClassFee) / 2);
+                    cmd.Parameters.AddWithValue("@Installment3", 0);
+                }
+                else if (cl.InstallmentNo == 3)
+                {
+                    cmd.Parameters.AddWithValue("@Installment1", (cl.ClassFee) / 3);
+                    cmd.Parameters.AddWithValue("@Installment2", (cl.ClassFee) / 3);
+                    cmd.Parameters.AddWithValue("@Installment3", (cl.ClassFee) / 3);
+                }
+                cmd.Parameters.AddWithValue("@Mode", 4);
 
                 int status = cmd.ExecuteNonQuery();
 
@@ -331,7 +346,65 @@ namespace SMS.Repositories
 
         }
 
+        internal string CreateById(Class cl)
+        {
+            string result = string.Empty;
 
+            try
+            {
+                con.Open();
+
+                cmd = new SqlCommand("proc_fee", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ClassId", cl.ClassId);
+                cmd.Parameters.AddWithValue("@TotalFee", cl.ClassFee);
+
+                if (cl.InstallmentNo == 1)
+                {
+                    cmd.Parameters.AddWithValue("@Installment1", cl.ClassFee);
+                    cmd.Parameters.AddWithValue("@Installment2", 0);
+                    cmd.Parameters.AddWithValue("@Installment3", 0);
+                }
+                else if (cl.InstallmentNo == 2)
+                {
+                    cmd.Parameters.AddWithValue("@Installment1", (cl.ClassFee) / 2);
+                    cmd.Parameters.AddWithValue("@Installment2", (cl.ClassFee) / 2);
+                    cmd.Parameters.AddWithValue("@Installment3", 0);
+                }
+                else if (cl.InstallmentNo == 3)
+                {
+                    cmd.Parameters.AddWithValue("@Installment1", (cl.ClassFee) / 3);
+                    cmd.Parameters.AddWithValue("@Installment2", (cl.ClassFee) / 3);
+                    cmd.Parameters.AddWithValue("@Installment3", (cl.ClassFee) / 3);
+                }
+                cmd.Parameters.AddWithValue("@Mode", 2);
+
+                int status = cmd.ExecuteNonQuery();
+
+                if (status <= 0)
+                {
+                    result = "Success";
+                }
+
+                else
+                {
+                    result = "Fail";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return result;
+
+        }
 
     }
 }

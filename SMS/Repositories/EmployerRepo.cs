@@ -10,31 +10,31 @@ using System.Configuration;
 
 namespace SMS.Repositories
 {
-    public class EmployerRepo : ICommon<Employer> 
-    { 
-    SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["sms"].ConnectionString);
-    SqlCommand cmd = null;
-
-    public List<Employer> GetAll()
+    public class EmployerRepo : ICommon<Employer>
     {
-        List<Employer> emplist = new List<Employer>();
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["sms"].ConnectionString);
+        SqlCommand cmd = null;
 
-        try
+        public List<Employer> GetAll()
         {
-            con.Open();
-            cmd = new SqlCommand("proc_emp", con);
+            List<Employer> emplist = new List<Employer>();
 
-
-            cmd.CommandType = CommandType.StoredProcedure;
-
-            cmd.Parameters.AddWithValue("@Mode", 0);
-
-            SqlDataReader sdr = cmd.ExecuteReader();
-
-            while (sdr.Read())
+            try
             {
+                con.Open();
+                cmd = new SqlCommand("proc_emp", con);
 
-                Employer emp = new Employer();
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@Mode", 0);
+
+                SqlDataReader sdr = cmd.ExecuteReader();
+
+                while (sdr.Read())
+                {
+
+                    Employer emp = new Employer();
 
                     emp.EmpId = sdr.GetInt32(0);
                     emp.EmpName = sdr.GetString(1);
@@ -47,27 +47,27 @@ namespace SMS.Repositories
                     emp.EmpPassword = sdr.GetInt32(8);
 
                     emplist.Add(emp);
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            con.Close();
-            throw ex.InnerException;
-        }
-        finally
-        {
-            con.Close();
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return emplist;
         }
 
-        return emplist;
-    }
-
-    public string Create(Employer obj)
-    {
-        string result = string.Empty;
-
-        try
+        public string Create(Employer obj)
         {
+            string result = string.Empty;
+
+            try
+            {
                 con.Open();
 
                 cmd = new SqlCommand("proc_emp", con);
@@ -84,35 +84,35 @@ namespace SMS.Repositories
 
                 int status = cmd.ExecuteNonQuery();
 
-            if (status <= 0)
-            {
-                result = "Success";
+                if (status <= 0)
+                {
+                    result = "Success";
+                }
+
+                else
+                {
+                    result = "Fail";
+                }
+
             }
-
-            else
+            catch (Exception ex)
             {
-                result = "Fail";
+                con.Close();
+                throw ex.InnerException;
             }
-
+            finally
+            {
+                con.Close();
+            }
+            return result;
         }
-        catch (Exception ex)
-        {
-            con.Close();
-            throw ex.InnerException;
-        }
-        finally
-        {
-            con.Close();
-        }
-        return result;
-    }
 
-    public string Update(Employer obj)
-    {
-        string result = string.Empty;
-
-        try
+        public string Update(Employer obj)
         {
+            string result = string.Empty;
+
+            try
+            {
                 con.Open();
 
                 cmd = new SqlCommand("proc_emp", con);
@@ -128,80 +128,80 @@ namespace SMS.Repositories
                 cmd.Parameters.AddWithValue("@EmpPassword", obj.EmpPassword);
                 cmd.Parameters.AddWithValue("@Mode", 3);
 
-            int status = cmd.ExecuteNonQuery();
+                int status = cmd.ExecuteNonQuery();
 
-            if (status <= 0)
+                if (status <= 0)
+                {
+                    result = "Success";
+                }
+
+                else
+                {
+                    result = "Fail";
+                }
+
+            }
+            catch (Exception ex)
             {
-                result = "Success";
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
             }
 
-            else
+            return result;
+
+        }
+
+
+        public string Delete(int Id)
+        {
+            string result = string.Empty;
+
+            try
             {
-                result = "Fail";
+                con.Open();
+
+                cmd = new SqlCommand("proc_emp", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@EmpId", Id);
+                cmd.Parameters.AddWithValue("@Mode", 4);
+
+                int status = cmd.ExecuteNonQuery();
+
+                if (status <= 0)
+                {
+                    result = "Success";
+                }
+
+                else
+                {
+                    result = "Fail";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
             }
 
-        }
-        catch (Exception ex)
-        {
-            con.Close();
-            throw ex.InnerException;
-        }
-        finally
-        {
-            con.Close();
+            return result;
         }
 
-        return result;
 
-    }
-
-
-    public string Delete(int Id)
-    {
-        string result = string.Empty;
-
-        try
+        public Employer GetById(int Id = 0)
         {
-            con.Open();
+            Employer obj = new Employer();
 
-            cmd = new SqlCommand("proc_emp", con);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@EmpId", Id);
-            cmd.Parameters.AddWithValue("@Mode", 4);
-
-            int status = cmd.ExecuteNonQuery();
-
-            if (status <= 0)
+            try
             {
-                result = "Success";
-            }
-
-            else
-            {
-                result = "Fail";
-            }
-
-        }
-        catch (Exception ex)
-        {
-            con.Close();
-            throw ex.InnerException;
-        }
-        finally
-        {
-            con.Close();
-        }
-
-        return result;
-    }
-
-
-    public Employer GetById(int Id = 0)
-    {
-        Employer obj = new Employer();
-
-        try
-        {
                 con.Open();
 
                 cmd = new SqlCommand("proc_emp", con);
@@ -224,18 +224,18 @@ namespace SMS.Repositories
                     obj.EmpPassword = sdr.GetInt32(8);
                 }
             }
-        catch (Exception ex)
-        {
-            con.Close();
-            throw ex.InnerException;
-        }
-        finally
-        {
-            con.Close();
-        }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
 
-        return obj;
-    }
+            return obj;
+        }
 
         public int GetNextId()
         {
@@ -270,5 +270,40 @@ namespace SMS.Repositories
             return NextId;
         }
 
+        internal DataSet GetByUsername(string username)
+        {
+            DataSet ds = new DataSet();
+
+            try
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("proc_emp", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@EmpUsername", username);
+                cmd.Parameters.AddWithValue("@Mode", 6);
+
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                
+                sda.Fill(ds);
+
+            }
+
+            catch (Exception ex)
+            {
+
+                con.Close();
+                throw ex.InnerException;
+            }
+
+            finally
+            {
+                con.Close();
+            }
+
+            return ds;
+        }
+
     }
+
+    
 }

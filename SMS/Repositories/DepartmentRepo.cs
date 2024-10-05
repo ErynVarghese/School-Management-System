@@ -234,5 +234,52 @@ namespace SMS.Repositories
 
             return NextId;
         }
+
+        internal string CheckDeptName(string deptname)
+        {
+            string result = string.Empty;
+
+            try
+            {
+                con.Open();
+
+                SqlCommand checkCmd = new SqlCommand("proc_dept", con);
+                checkCmd.CommandType = CommandType.StoredProcedure;
+                checkCmd.Parameters.AddWithValue("@DeptName", deptname);
+                checkCmd.Parameters.AddWithValue("@Mode", 6);
+
+
+                bool deptExists = false;
+                SqlDataReader reader = checkCmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    deptExists = reader.GetInt32(0) > 0; // Check if the count is greater than 0
+                }
+
+                if (deptExists)
+                {
+                    result = "Error";
+                }
+
+                else
+                {
+                    result = "Success";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return result;
+
+        }
     }
 }

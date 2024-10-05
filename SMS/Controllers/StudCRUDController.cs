@@ -35,7 +35,7 @@ namespace SMS.Controllers
         }
 
 
-        public ActionResult StudList(string searchedname)
+        public ActionResult StudList()
         {
             List<Student> sList = new List<Student>();
 
@@ -64,7 +64,7 @@ namespace SMS.Controllers
         [HttpPost]
         public ActionResult AddStud(Student stud)
         {
-            List<Student> sList = new List<Student>();
+           
 
             if (ModelState.IsValid)
             {
@@ -153,6 +153,8 @@ namespace SMS.Controllers
             //modify below 
             return RedirectToAction("GetList");
         }
+
+
 
 
     }

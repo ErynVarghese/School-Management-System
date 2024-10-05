@@ -248,7 +248,7 @@ namespace SMS.Repositories
             return NextId;
         }
 
-        public string CheckClassName(string classname)
+        internal string CheckClassName(string classname)
         {
             string result = string.Empty;
 

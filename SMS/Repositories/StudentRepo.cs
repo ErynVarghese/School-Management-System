@@ -281,7 +281,38 @@ namespace SMS.Repositories
             return NextId;
         }
 
+        internal DataSet GetByUsername(string username)
+        {
+            DataSet ds = new DataSet();
 
-        
+            try
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("proc_student", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@StudentUsername", username);
+                cmd.Parameters.AddWithValue("@Mode", 6);
+
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+
+                sda.Fill(ds);
+
+            }
+
+            catch (Exception ex)
+            {
+
+                con.Close();
+                throw ex.InnerException;
+            }
+
+            finally
+            {
+                con.Close();
+            }
+
+            return ds;
+        }
+
     }
 }
