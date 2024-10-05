@@ -66,40 +66,50 @@ namespace SMS.Controllers
         {
             List<Student> sList = new List<Student>();
 
-            try
+            if (ModelState.IsValid)
             {
-                if (stud.StudentId > 0)
+
+
+                try
                 {
-                    string result = studrepo.Update(stud);
-                    if (result == "Success")
+                    if (stud.StudentId > 0)
                     {
-                        ModelState.Clear();
-                        TempData["Success"] = "Updated successfully...";
+                        string result = studrepo.Update(stud);
+                        if (result == "Success")
+                        {
+                            ModelState.Clear();
+                            TempData["Success"] = "Updated successfully...";
+                        }
+                        else
+                        {
+                            TempData["Error"] = "Failed to update...";
+                        }
                     }
                     else
                     {
-                        TempData["Error"] = "Failed to update...";
+                        string result = studrepo.Create(stud);
+                        if (result == "Success")
+                        {
+                            ModelState.Clear();
+                            TempData["Success"] = "Created successfully...";
+                        }
+                        else
+                        {
+                            TempData["Error"] = "Failed to create...";
+                        }
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    string result = studrepo.Create(stud);
-                    if (result == "Success")
-                    {
-                        ModelState.Clear();
-                        TempData["Success"] = "Created successfully...";
-                    }
-                    else
-                    {
-                        TempData["Error"] = "Failed to create...";
-                    }
+                    TempData["Error"] = "Failed to update/create...";
+                    throw ex.InnerException;
                 }
-            } catch (Exception ex)
-            {
-                TempData["Error"] = "Failed to update/create...";
-                throw ex.InnerException;
             }
-        
+            else
+            {
+                TempData["Error"] = "Fill out all the details!";
+            }
+
             return View(stud);
     }
 

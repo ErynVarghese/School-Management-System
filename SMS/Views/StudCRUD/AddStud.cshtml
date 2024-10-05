@@ -13,6 +13,7 @@
     <title>Add Student</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
+
     <style>
         body {
             background-color: #4B0082;
@@ -45,6 +46,7 @@
         .form-label {
             color: #4c0070;
         }
+
         .form-control {
             background-color: #E6E6FA; /* Light purple for input fields */
         }
@@ -116,14 +118,16 @@
 
                     <div class="mb-3">
                         @Html.LabelFor(model => model.StudentName, "Student Name", new { @class = "form-label required" })
-                        @Html.TextBoxFor(model => model.StudentName, new { @class = "form-control", @pattern = "[A-Za-z ]*" })
+                        @Html.TextBoxFor(model => model.StudentName, new { @class = "form-control", @pattern = "[A-Za-z ]*" , @id = "StudentName" })
                         @Html.ValidationMessageFor(model => model.StudentName, "", new { @class = "text-danger" })
+                        
                     </div>
 
                     <div class="mb-3">
                         @Html.LabelFor(model => model.DOB, "Date of Birth", new { @class = "form-label required" })
                         @Html.TextBoxFor(model => model.DOB, new { @class = "form-control datepicker", @id = "txtDate", @value = "" })
                         @Html.ValidationMessageFor(model => model.DOB, "", new { @class = "text-danger" })
+                 
                     </div>
 
                     <div class="mb-3">
@@ -131,6 +135,7 @@
                         @Html.DropDownListFor(model => model.ClassId, new SelectList(ViewBag.ClassList, "ClassId", "ClassName"),
                             "-- Select --", new { @class = "form-select", @id = "classDropdown" })
                         @Html.ValidationMessageFor(model => model.ClassId, "", new { @class = "text-danger" })
+                        
                     </div>
 
                     <div class="mb-3">
@@ -138,42 +143,49 @@
                         @Html.DropDownListFor(model => model.SectionId, new SelectList(ViewBag.SectionList, "SectionId", "SectionName"),
                             "-- Select --", new { @class = "form-select", @id = "sectionDropdown" })
                         @Html.ValidationMessageFor(model => model.SectionId, "", new { @class = "text-danger" })
+                        
                     </div>
 
                     <div class="mb-3">
                         @Html.LabelFor(model => model.FatherName, "Father's Name", new { @class = "form-label required" })
-                        @Html.TextBoxFor(model => model.FatherName, new { @class = "form-control", @pattern = "[A-Za-z ]*" })
+                        @Html.TextBoxFor(model => model.FatherName, new { @class = "form-control", @pattern = "[A-Za-z ]*", @id = "FatherName", @value = "" })
                         @Html.ValidationMessageFor(model => model.FatherName, "", new { @class = "text-danger" })
+                
                     </div>
 
                     <div class="mb-3">
                         @Html.LabelFor(model => model.ContactNo, "Contact Number", new { @class = "form-label required" })
-                        @Html.TextBoxFor(model => model.ContactNo, new { @class = "form-control", type = "number" })
+                        @Html.TextBoxFor(model => model.ContactNo, new { @class = "form-control", type = "number", @id = "ContactNo" })
                         @Html.ValidationMessageFor(model => model.ContactNo, "", new { @class = "text-danger" })
+                      
                     </div>
 
                     <div class="mb-3">
                         @Html.LabelFor(m => m.StudentAddress, "Address", new { @class = "form-label required" })
-                        @Html.TextBoxFor(model => model.StudentAddress, new { @class = "form-control" })
+                        @Html.TextBoxFor(model => model.StudentAddress, new { @class = "form-control", @id = "StudentAddress" })
                         @Html.ValidationMessageFor(model => model.StudentAddress, "", new { @class = "text-danger" })
+           
                     </div>
 
                     <div class="mb-3">
                         @Html.LabelFor(m => m.StudentUsername, "Username", new { @class = "form-label required" })
-                        @Html.TextBoxFor(model => model.StudentUsername, new { @class = "form-control" })
+                        @Html.TextBoxFor(model => model.StudentUsername, new { @class = "form-control", @id = "StudentUsername" })
                         @Html.ValidationMessageFor(model => model.StudentUsername, "", new { @class = "text-danger" })
+                    
                     </div>
 
                     <div class="mb-3">
                         @Html.LabelFor(m => m.StudentPassword, "Password", new { @class = "form-label required" })
-                        @Html.PasswordFor(model => model.StudentPassword, new { @class = "form-control" })
+                        @Html.PasswordFor(model => model.StudentPassword, new { @class = "form-control", @id = "StudentPassword" })
                         @Html.ValidationMessageFor(model => model.StudentPassword, "", new { @class = "text-danger" })
+          
                     </div>
 
                     <div class="mb-3">
                         @Html.LabelFor(m => m.StudentFee, "Class Fee", new { @class = "form-label " })
                         @Html.TextBoxFor(model => model.StudentFee, new { @class = "form-control", @readonly = "readonly", @id = "StudentFee" })
                         @Html.ValidationMessageFor(model => model.StudentFee, "", new { @class = "text-danger" })
+                    
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100">Save Student</button>
@@ -186,13 +198,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
 
-    <script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#sectionDropdown').attr('disabled',true);
+
+    });
+
+
     $(document).ready(function () {
         $('.datepicker').datepicker({
             format: 'dd/mm/yyyy',
         });
 
+
+
         $('#classDropdown').change(function () {
+            $('#sectionDropdown').attr('disabled', false);
             var classId = $(this).val();
             if (classId) {
                 $.ajax({
@@ -227,6 +249,8 @@
             }
         });
     });
+
+
     </script>
 
 </body>
