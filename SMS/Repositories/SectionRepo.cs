@@ -279,5 +279,54 @@ namespace SMS.Repositories
             return sList;
         }
 
+        internal string CheckSectionName(Section section)
+        {
+            string result = string.Empty;
+
+            try
+            {
+                con.Open();
+
+                SqlCommand checkCmd = new SqlCommand("proc_section", con);
+                checkCmd.CommandType = CommandType.StoredProcedure;
+                checkCmd.Parameters.AddWithValue("@SectionName", section.SectionName);
+                checkCmd.Parameters.AddWithValue("@ClassId", section.ClassId);
+                checkCmd.Parameters.AddWithValue("@SectionId", section.SectionId);
+                checkCmd.Parameters.AddWithValue("@mode", 9); ;
+
+                bool sectionExists = false;
+
+                SqlDataReader reader = checkCmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    sectionExists = reader.GetInt32(0) > 0;
+                }
+
+                if (sectionExists)
+                {
+                    result = "Error";
+                }
+
+                else
+                {
+                    result = "Success";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return result;
+
+        }
+
     }
 }
