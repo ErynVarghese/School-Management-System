@@ -69,7 +69,6 @@ namespace SMS.Controllers
             if (ModelState.IsValid)
             {
 
-
                 try
                 {
                     if (stud.StudentId > 0)

@@ -7,6 +7,7 @@ using SMS.Models;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using SMS.Repositories;
 
 namespace SMS.Controllers
 {
@@ -14,135 +15,75 @@ namespace SMS.Controllers
     {
         // GET: Registration
 
+        StudentRepo studrepo = new StudentRepo();
+        EmployerRepo emprepo = new EmployerRepo();
+        AdminRepo admrepo = new AdminRepo();
+
+        ClassRepo classRepo = new ClassRepo();
+        SectionRepo sectionRepo = new SectionRepo();
+        DepartmentRepo deptrepo = new DepartmentRepo();
+
+
+        List<Class> classlist = new List<Class>();
+
+        List<Section> sectionlist = new List<Section>();
+
+        List<Department> deptlist = new List<Department>();
+
+        public RegistrationController()
+        {
+            classlist = classRepo.GetAll();
+            ViewBag.ClassList = classlist;
+
+            sectionlist = sectionRepo.GetAll();
+            ViewBag.SectionList = sectionlist;
+
+            deptlist = deptrepo.GetAll();
+            ViewBag.DeptList = deptlist;
+
+            ViewBag.MaxStudId = studrepo.GetNextId();
+            ViewBag.MaxEmpId = deptrepo.GetNextId();
+            ViewBag.MaxAdminId = admrepo.GetNextId();
+        }
+
 
         public ActionResult EmpRegister()
         {
-            List<GetIdfromName> departmentList = new List<GetIdfromName>();
-
-            try
-            {
-                // Fetch the max employee ID
-                cmd = new SqlCommand("proc_emp", con);
-                con.Open();
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Mode", 7);
-
-                SqlDataReader sdr = cmd.ExecuteReader();
-                if (sdr.Read())
-                {
-                    ViewBag.MaxEmpId = sdr.GetInt32(0);
-                }
-                con.Close();
-
-                // Fetch the list of departments
-                cmd = new SqlCommand("proc_dept", con);
-                con.Open();
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Mode", 0);
-
-                SqlDataReader sdrDept = cmd.ExecuteReader();
-                while (sdrDept.Read())
-                {
-                    departmentList.Add(new GetIdfromName
-                    {
-                        Id = sdrDept.GetInt32(0), // Department ID
-                        Name = sdrDept.GetString(1) // Department Name
-                    });
-                }
-                ViewBag.DepartmentList = new SelectList(departmentList, "Id", "Name");
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Error in processing the request: " + ex.Message;
-            }
-            finally
-            {
-                con.Close();
-            }
-
             return View();
         }
 
 
         [HttpPost]
         public ActionResult EmpRegister(Employer emp)
-        {
-            List<GetIdfromName> departmentList = new List<GetIdfromName>();
-
-            try
-            {
-                // Repopulate the list of departments for the dropdown
-                cmd = new SqlCommand("proc_dept", con);
-                con.Open();
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Mode", 0);
-
-                SqlDataReader sdrDept = cmd.ExecuteReader();
-                while (sdrDept.Read())
-                {
-                    departmentList.Add(new GetIdfromName
-                    {
-                        Id = sdrDept.GetInt32(0),
-                        Name = sdrDept.GetString(1) 
-                    });
-                }
-                ViewBag.DepartmentList = new SelectList(departmentList, "Id", "Name");
-
-                con.Close();
-
+        {   
+            
                 if (ModelState.IsValid)
                 {
-                    con.Open();
-                    cmd = new SqlCommand("proc_emp", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@EmpName", emp.EmpName);
-                    cmd.Parameters.AddWithValue("@ContactNo", emp.ContactNo);
-                    cmd.Parameters.AddWithValue("@Email", emp.Email);
-                    cmd.Parameters.AddWithValue("@DOB", emp.DOB);
-                    cmd.Parameters.AddWithValue("@DeptId", emp.DeptId);
-                    cmd.Parameters.AddWithValue("@DOJ", emp.DOJ);
-                    cmd.Parameters.AddWithValue("@EmpUsername", emp.EmpUsername);
-                    cmd.Parameters.AddWithValue("@EmpPassword", emp.EmpPassword);
-                    cmd.Parameters.AddWithValue("@Mode", 3);
-
-                    int status = cmd.ExecuteNonQuery();
-
-                    if (status < 0)
-                    {
-                        TempData["Success"] = "Registration successful! :)";
-                        if (Session["UserType"] == null)
-                        {
-                            return RedirectToAction("GetUserType", "Login");
-                        } else
-                        {
-                            return RedirectToAction("MainPage", "Login");
-                        } 
-                    }
-                    else
-                    {
-                        TempData["Error"] = "Registration failed.";
-                        return View(emp);
-                    }
-                }
-                else
+                try
                 {
-                    TempData["Error"] = "Fill out all the details!!";
-
-                    return View(emp);
+                    string result = emprepo.Create(emp);
+                     if (result == "Success")
+                     {
+                         ModelState.Clear();
+                         TempData["Success"] = "Registered successfully...";
+                     }
+                     else
+                        {
+                           TempData["Error"] = "Failed to register...";
+                        }
+                    }                
+                catch (Exception ex)
+                {
+                    TempData["Error"] = "Failed to register...";
+                    throw ex.InnerException;
                 }
             }
-            catch (Exception ex)
+            else
             {
-                TempData["Error"] = "Error in processing the request: " + ex.Message;
-                return View(emp);
+                TempData["Error"] = "Fill out all the details!";
             }
-            finally
-            {
-                con.Close();
 
-            }
-            //return View(emp);
+            return View(emp);
         }
 
         public ActionResult StudRegister(int? classId = null)
