@@ -17,10 +17,15 @@ namespace SMS.Controllers
         // GET: Fee
 
         FeeStructureRepo feestructrepo = new FeeStructureRepo();
+        ClassRepo classRepo = new ClassRepo();
 
+        List<Class> classlist = new List<Class>();
 
         public FeeController()
         {
+            classlist = classRepo.GetAll();
+            ViewBag.ClassList = classlist;
+
 
             ViewBag.MaxFeeStructId = feestructrepo.GetNextId();
 

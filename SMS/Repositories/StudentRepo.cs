@@ -314,5 +314,169 @@ namespace SMS.Repositories
             return ds;
         }
 
+
+        internal string StudentExists(int studid)
+        {
+            string result = string.Empty;
+
+            try
+            {
+                con.Open();
+
+                SqlCommand checkCmd = new SqlCommand("proc_student", con);
+                checkCmd.CommandType = CommandType.StoredProcedure;
+                checkCmd.Parameters.AddWithValue("@StudentId", studid);
+                checkCmd.Parameters.AddWithValue("@mode", 7); ;
+
+                bool studExists = false;
+
+                SqlDataReader reader = checkCmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    studExists = reader.GetInt32(0) > 0;
+                }
+
+                if (studExists)
+                {
+                    result = "Exists";
+                }
+
+                else
+                {
+                    result = "NotExists";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return result;
+
+        }
+
+        internal List<Student> GetStudentsByClassId(int Id)
+        {
+            List<Student> sList = new List<Student>();
+
+            try
+            {
+                con.Open();
+                cmd = new SqlCommand("proc_student", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ClassId", Id);
+                cmd.Parameters.AddWithValue("@Mode", 8);
+
+                SqlDataReader sdr = cmd.ExecuteReader();
+
+                while (sdr.Read())
+                {
+                    Student obj = new Student();
+                    obj.StudentId = sdr.GetInt32(0);
+                    obj.StudentName = sdr.GetString(1);
+                    sList.Add(obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+            return sList;
+        }
+
+
+        public string AddImage(int studid, string filename)
+        {
+            string result = string.Empty;
+
+            try
+            {
+                con.Open();
+
+                cmd = new SqlCommand("proc_student", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@StudentId", studid);
+                cmd.Parameters.AddWithValue("@ImageName", filename);
+                cmd.Parameters.AddWithValue("@Mode", 9);
+
+                int status = cmd.ExecuteNonQuery();
+
+                if (status <= 0)
+                {
+                    result = "Success";
+                }
+
+                else
+                {
+                    result = "Fail";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return result;
+
+        }
+
+        internal string GetStudentImage(int studid)
+        {
+            string image = string.Empty;
+
+            try
+            {
+                con.Open();
+
+                SqlCommand checkCmd = new SqlCommand("proc_student", con);
+                checkCmd.CommandType = CommandType.StoredProcedure;
+                checkCmd.Parameters.AddWithValue("@StudentId", studid);
+                checkCmd.Parameters.AddWithValue("@mode", 10); ;
+
+        
+
+                SqlDataReader reader = checkCmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    image = reader.GetString(0);
+
+                }
+               
+
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return image;
+
+        }
+
     }
 }

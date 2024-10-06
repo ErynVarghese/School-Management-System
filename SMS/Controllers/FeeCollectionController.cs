@@ -17,11 +17,26 @@ namespace SMS.Controllers
     {
         // GET: FeeCollection
 
-       FeeCollectionRepo feecolrepo = new FeeCollectionRepo();
+        FeeCollectionRepo feecolrepo = new FeeCollectionRepo();
+        FeeStructureRepo feestructrepo = new FeeStructureRepo();
+
+        ClassRepo classRepo = new ClassRepo();
+        StudentRepo studRepo = new StudentRepo();
+
+        List<Class> classlist = new List<Class>();
+
+        List<Student> studlist = new List<Student>();
+
 
 
         public FeeCollectionController()
         {
+
+            classlist = classRepo.GetAll();
+            ViewBag.ClassList = classlist;
+
+            studlist = studRepo.GetAll();
+            ViewBag.StudentList = studlist;
 
             ViewBag.MaxFeeColId = feecolrepo.GetNextId();
 
@@ -102,25 +117,64 @@ namespace SMS.Controllers
             return View(feecol);
         }
 
-/**
+        /**
 
-        [HttpGet]
-        public JsonResult GetSectionsByClassId(int classId)
+                [HttpGet]
+                public JsonResult GetSectionsByClassId(int classId)
+                {
+                    List<Section> sList = sectionRepo.GetSectionsByClassId(classId);
+                    return Json(sList, JsonRequestBehavior.AllowGet);
+                }
+
+
+                [HttpGet]
+                public JsonResult GetClassFeeById(int classId)
+                {
+
+                    decimal classFee = feestructrepo.GetClassFeeById(classId);
+                    return Json(classFee, JsonRequestBehavior.AllowGet);
+                }
+
+        **/
+
+
+        public JsonResult GetInstallations(int classId)
         {
-            List<Section> sList = sectionRepo.GetSectionsByClassId(classId);
-            return Json(sList, JsonRequestBehavior.AllowGet);
+            // Replace this with your actual database fetching logic
+            // Assuming you are fetching three decimal values related to classId from your DB
+            List<decimal> installations = new List<decimal>();
+
+            var installation1 = feestructrepo.GetInstallation1ByClassId(classId); // Fetch from DB
+            var installation2 = feestructrepo.GetInstallation2ByClassId(classId); // Fetch from DB
+            var installation3 = feestructrepo.GetInstallation3ByClassId(classId); // Fetch from DB
+
+            installations.Add(installation1);
+            installations.Add(installation2);
+            installations.Add(installation3);
+
+            // Return the list of installation values as JSON
+            return Json(installations,JsonRequestBehavior.AllowGet);
         }
 
-
-        [HttpGet]
-        public JsonResult GetClassFeeById(int classId)
+        public JsonResult GetInstallationsByStudId(int studid)
         {
+            // Replace this with your actual database fetching logic
+            // Assuming you are fetching three decimal values related to classId from your DB
+            List<bool> installations = new List<bool>();
 
-            decimal classFee = feestructrepo.GetClassFeeById(classId);
-            return Json(classFee, JsonRequestBehavior.AllowGet);
+            bool installation1 = feecolrepo.GetInstallation1ByStudId(studid).ToLower() == "true"; // Fetch from DB
+            bool installation2 = feecolrepo.GetInstallation2ByStudId(studid).ToLower() == "true"; // Fetch from DB
+            bool installation3 = feecolrepo.GetInstallation3ByStudId(studid).ToLower() == "true"; // Fetch from DB
+
+
+            installations.Add(installation1);
+            installations.Add(installation2);
+            installations.Add(installation3);
+
+            // Return the list of installation values as JSON
+            return Json(installations,JsonRequestBehavior.AllowGet);
         }
 
-**/
 
         public ActionResult DeleteFeeCol(int id)
         {

@@ -126,6 +126,13 @@ namespace SMS.Controllers
             return Json(sList, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult GetStudentsByClassId(int classId)
+        {
+            List<Student> sList = studrepo.GetStudentsByClassId(classId);
+            return Json(sList, JsonRequestBehavior.AllowGet);
+        }
+
 
         [HttpGet]
         public JsonResult GetClassFeeById(int classId)
@@ -194,134 +201,166 @@ namespace SMS.Controllers
                     var start = workSheet.Dimension.Start;
                     var end = workSheet.Dimension.End;
 
-                    //Iterate through the worksheet cells and read data
-
-                    //for (var r = start.Row + 1; r <= end.Row; r++)
-                    //{
-                    //    string CorrectType;
-                    //    string Exists;
-
-
-
-                    //    Student student = new Student
-                    //    {
-                    //        StudentId = Convert.ToInt32(workSheet.Cells[r, 1].Value?.ToString()),
-                    //        StudentName = workSheet.Cells[r, 2].Value?.ToString(),
-                    //        DOB = Convert.ToDateTime(workSheet.Cells[r, 3].Value?.ToString()),
-                    //        ClassId = Convert.ToInt32(workSheet.Cells[r, 4].Value?.ToString()),
-                    //        SectionId = Convert.ToInt32(workSheet.Cells[r, 5].Value?.ToString()),
-                    //        FatherName = workSheet.Cells[r, 6].Value?.ToString(),
-                    //        ContactNo = Convert.ToInt32(workSheet.Cells[r, 7].Value?.ToString()),
-                    //        StudentAddress = workSheet.Cells[r, 8].Value?.ToString(),
-                    //        StudentUsername = workSheet.Cells[r, 9].Value?.ToString(),
-                    //        StudentPassword = Convert.ToInt32(workSheet.Cells[r, 10].Value?.ToString()),
-                    //        StudentFee = Convert.ToInt32(workSheet.Cells[r, 11].Value?.ToString())
-                    //    };
-
-                    //    sList.Add(student);
-                    //}
-
                     List<string> validationErrors = new List<string>();
 
-                    //Iterate through the worksheet cells and read data
+
+                    int studentId = 0; 
+                    DateTime dob; 
+                    int classId = 0;
+                    int sectionId = 0;
+                    int contactNo = 0;
+                    int studentPassword = 0;
+                    int studentFee = 0;
+
+
+                 
                     for (var r = start.Row + 1; r <= end.Row; r++)
                     {
                         string errorMessage = "";
 
-                        // Validate StudentId
-                        string cellValue = workSheet.Cells[r, 1].Value?.ToString(); 
-
-                        
-                        if (string.IsNullOrEmpty(cellValue))
+                        // Validate StudentId - no ext - update alt
+                        string studentIdStr = workSheet.Cells[r, 1].Value?.ToString();
+                        if (string.IsNullOrEmpty(studentIdStr))
                         {
-                            errorMessage += $"Row {r}: StudentId is required. ";
+                            errorMessage += $"Row {r}: StudentId cannot be null or empty. ";
                         }
-                        else if (!int.TryParse(cellValue, out int studentId))
+                        else if (!int.TryParse(studentIdStr, out  studentId))
                         {
                             errorMessage += $"Row {r}: Invalid StudentId type. ";
                         }
 
-                        // Validate StudentName
+                        // Validate StudentName - no ext
                         string studentName = workSheet.Cells[r, 2].Value?.ToString();
                         if (string.IsNullOrEmpty(studentName))
                         {
                             errorMessage += $"Row {r}: StudentName cannot be empty. ";
                         }
+                        else if (!studentName.All(char.IsLetter)) 
+                        {
+                            errorMessage += $"Row {r}: StudentName must contain only letters. ";
+                        }
 
-                        // Validate DOB
-                        if (!DateTime.TryParse(workSheet.Cells[r, 3].Value?.ToString(), out DateTime dob))
+                        // Validate DOB - no ext
+                        if (!DateTime.TryParse(workSheet.Cells[r, 3].Value?.ToString(), out  dob))
                         {
                             errorMessage += $"Row {r}: Invalid Date of Birth. ";
                         }
 
-                        // Validate ClassId
-                        if (!int.TryParse(workSheet.Cells[r, 4].Value?.ToString(), out int classId))
+                        // Validate ClassId - ext needed (in else)
+                        string classIdStr = workSheet.Cells[r, 4].Value?.ToString();
+                        if (string.IsNullOrEmpty(classIdStr))
+                        {
+                            errorMessage += $"Row {r}: ClassId cannot be null or empty. ";
+                        }
+                        else if (!int.TryParse(classIdStr, out  classId))
                         {
                             errorMessage += $"Row {r}: Invalid ClassId. ";
                         }
                         else
                         {
-                            // Check if ClassId exists in your database (pseudo code)
-                            // if (!classRepo.Exists(classId)) {
-                            //     errorMessage += $"Row {r}: ClassId {classId} does not exist. ";
-                            // }
+                            //check if the class id exists 
+                            string result = classRepo.CheckClassId(classId);
+
+                            if (result == "Error")
+                            {
+                                errorMessage += $"Row {r}: ClassId {classId} does not exist. ";
+                            }
+
                         }
 
-                        // Validate SectionId
-                        if (!int.TryParse(workSheet.Cells[r, 5].Value?.ToString(), out int sectionId))
+                        // Validate SectionId - ext needed (in else)
+                        string sectionIdStr = workSheet.Cells[r, 5].Value?.ToString();
+                        if (string.IsNullOrEmpty(sectionIdStr))
+                        {
+                            errorMessage += $"Row {r}: SectionId cannot be null or empty. ";
+                        }
+                        else if (!int.TryParse(sectionIdStr, out  sectionId))
                         {
                             errorMessage += $"Row {r}: Invalid SectionId. ";
                         }
                         else
                         {
-                            // Check if SectionId exists in your database (pseudo code)
-                            // if (!sectionRepo.Exists(sectionId)) {
-                            //     errorMessage += $"Row {r}: SectionId {sectionId} does not exist. ";
-                            // }
+                            string result = sectionRepo.CheckSectionId(sectionId);
+
+                            if (result == "Error")
+                            {
+                                errorMessage += $"Row {r}: SectionId {sectionId} does not exist. ";
+                            }
+
                         }
 
-                        // Validate FatherName
+                        // Validate FatherName - no ext
                         string fatherName = workSheet.Cells[r, 6].Value?.ToString();
                         if (string.IsNullOrEmpty(fatherName))
                         {
                             errorMessage += $"Row {r}: FatherName cannot be empty. ";
                         }
+                        else if (!fatherName.All(char.IsLetter))
+                        {
+                            errorMessage += $"Row {r}: FatherName must contain only letters. ";
+                        }
 
-                        // Validate ContactNo
-                        if (!int.TryParse(workSheet.Cells[r, 7].Value?.ToString(), out int contactNo))
+                        // Validate ContactNo - no ext
+                        string contactNoStr = workSheet.Cells[r, 7].Value?.ToString();
+                        if (string.IsNullOrEmpty(contactNoStr))
+                        {
+                            errorMessage += $"Row {r}: Contact Number cannot be null or empty. ";
+                        }
+                        else if (!int.TryParse(contactNoStr, out  contactNo))
                         {
                             errorMessage += $"Row {r}: Invalid Contact Number. ";
                         }
 
-                        // Validate StudentAddress
+
+                        // Validate StudentAddress - no ext
                         string studentAddress = workSheet.Cells[r, 8].Value?.ToString();
                         if (string.IsNullOrEmpty(studentAddress))
                         {
                             errorMessage += $"Row {r}: StudentAddress cannot be empty. ";
                         }
+                        else if (!studentAddress.All(char.IsLetter))
+                        {
+                            errorMessage += $"Row {r}: Student Address must contain only letters. ";
+                        }
 
-                        // Validate StudentUsername
+                        // Validate StudentUsername - no ext
                         string studentUsername = workSheet.Cells[r, 9].Value?.ToString();
                         if (string.IsNullOrEmpty(studentUsername))
                         {
                             errorMessage += $"Row {r}: StudentUsername cannot be empty. ";
                         }
+                        else if (!studentUsername.All(char.IsLetter))
+                        {
+                            errorMessage += $"Row {r}: StudentName must contain only letters. ";
+                        }
 
-                        // Validate StudentPassword
-                        if (!int.TryParse(workSheet.Cells[r, 10].Value?.ToString(), out int studentPassword))
+                        // Validate StudentPassword - no ext
+
+                        string studentPasswordStr = workSheet.Cells[r, 10].Value?.ToString();
+                        if (string.IsNullOrEmpty(studentPasswordStr))
+                        {
+                            errorMessage += $"Row {r}: Student Password cannot be null or empty. ";
+                        }
+                        else if (!int.TryParse(studentPasswordStr, out  studentPassword))
                         {
                             errorMessage += $"Row {r}: Invalid Student Password. ";
                         }
 
-                        // Validate StudentFee
-                        if (!int.TryParse(workSheet.Cells[r, 11].Value?.ToString(), out int studentFee))
+                        // Validate StudentFee - no ext
+
+                        string studentFeeStr = workSheet.Cells[r, 11].Value?.ToString();
+                        if (string.IsNullOrEmpty(studentFeeStr))
+                        {
+                            errorMessage += $"Row {r}: Student Fee cannot be null or empty. ";
+                        }
+                        else if (!int.TryParse(studentFeeStr, out  studentFee))
                         {
                             errorMessage += $"Row {r}: Invalid Student Fee. ";
                         }
 
+                        // If there are no validation errors, create the student
                         if (string.IsNullOrEmpty(errorMessage))
                         {
-                            // If there are no validation errors, create the student
                             Student student = new Student
                             {
                                 StudentId = studentId,
@@ -345,13 +384,11 @@ namespace SMS.Controllers
                         }
                     }
 
-                    // After the loop, you can handle validation errors as needed
+                    // After the loop, handle validation errors as needed
                     if (validationErrors.Any())
                     {
                         TempData["Error"] = string.Join("<br>", validationErrors);
                     }
-
-
                 }
             }
            
@@ -361,21 +398,39 @@ namespace SMS.Controllers
 
                 foreach (Student stud in sList)
                 {
-                    // Attempt to create the student record
-                    string result = studrepo.Create(stud);
+                    string result = studrepo.StudentExists(stud.StudentId);
 
-                    // Skip if the creation failed
-                    if (result != "Success")
+                    if (result == "Exists")
                     {
-                        failedCount++;
-                        continue; // Skip this record and continue with the next
+                        string updateresult = studrepo.Update(stud);
+
+                        // Skip if the creation failed
+                        if (updateresult != "Success")
+                        {
+                            failedCount++;
+                            continue; 
+                        }
+
                     }
+                    else
+                    {
+                        string createresult = studrepo.Create(stud);
+
+                        // Skip if the creation failed
+                        if (createresult != "Success")
+                        {
+                            failedCount++;
+                            continue; 
+                        }
+                    }
+                 
+
                 }
 
-                // Provide feedback based on the number of failed records
+            
                 if (failedCount > 0)
                 {
-                    TempData["Error"] = $"{failedCount} student record(s) failed to create.";
+                    TempData["Error"] = $"{failedCount} student record(s) failed to update/create.";
                 }
                 else
                 {
@@ -389,7 +444,108 @@ namespace SMS.Controllers
 
             return RedirectToAction("UploadStudent");
         }
-    
+
+
+        [HttpGet]
+        public ActionResult UploadImage()
+        {
+
+            return View(); // Return the view with the fetched student data
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UploadImage(Student student, System.Web.HttpPostedFileBase fileUpload)
+        {
+           
+                // Check if an image file was uploaded
+                if (fileUpload != null && fileUpload.ContentLength > 0)
+                {
+                    // Generate a unique file name
+                    string fileName = Path.GetFileName(fileUpload.FileName);
+                    string uploadPath = Path.Combine(Server.MapPath("~/UploadedImages"));
+
+                    // Ensure the upload directory exists
+                    if (!Directory.Exists(uploadPath))
+                    {
+                        Directory.CreateDirectory(uploadPath);
+                    }
+
+                    string filePath = Path.Combine(uploadPath, fileName);
+
+                    // Save the image to the folder
+                    try
+                    {
+                        fileUpload.SaveAs(filePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("", "Error saving the image: " + ex.Message);
+                        return View(student);
+                    }
+
+
+                    // Use the AddImage method from your repository to update the student's image
+                    StudentRepo studentRepo = new StudentRepo(); // Assuming StudentRepo is the class containing your AddImage method
+                    string result = studentRepo.AddImage(student.StudentId, fileName);
+
+                    // Check the result and handle accordingly
+                    if (result == "Success")
+                    {
+                          TempData["Success"] = "uploaded successfully!";
+                        // Redirect to the index or another action after saving
+                        return RedirectToAction("UploadImage");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Failed to update the student's image.");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Please upload a valid image file.");
+                }
+            
+
+            return View(student);
+        }
+
+        // Action to view the student's image
+
+           
+
+            // GET: Display the form for entering Student ID
+            [HttpGet]
+            public ActionResult ViewStudentImage()
+            {
+                return View(new Student()); // Return an empty Student model
+            }
+
+            // POST: Handle form submission
+            [HttpPost]
+            
+            public ActionResult ViewStudentImage(int studentId)
+            {
+                // Fetch the image for the provided Student ID
+                string imageName = studrepo.GetStudentImage(studentId);
+
+                if (!string.IsNullOrEmpty(imageName))
+                {
+                    ViewBag.ImagePath = Url.Content("~/UploadedImages/" + imageName); // Path for existing image
+                }
+                else
+                {
+                    ViewBag.Message = "No image found for this Student ID.";
+                }
+
+                return View(new Student { StudentId = studentId }); // Return the same view with the student ID
+            }
+        
+
+
+
     }
 
 }

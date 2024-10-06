@@ -1,0 +1,52 @@
+﻿@model SMS.Models.Student
+
+@using (Html.BeginForm("UploadImage", "StudCRUD", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div>
+        @Html.LabelFor(m => m.StudentId)
+        @Html.TextBoxFor(m => m.StudentId)
+    </div>
+
+    <div>
+        <label>Upload Image</label>
+        <input type="file" name="fileUpload" />
+    </div>
+
+    <button type="submit">Update Image</button>
+}
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <strong>Errors:</strong>
+        <ul>
+            @foreach (var state in ViewData.ModelState)
+            {
+                if (state.Value.Errors.Count > 0)
+                {
+                    <li>@state.Key: @state.Value.Errors[0].ErrorMessage</li>
+                }
+            }
+        </ul>
+    </div>
+}
+

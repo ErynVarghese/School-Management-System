@@ -42,5 +42,7 @@ namespace SMS.Models
         [Required(ErrorMessage = "StudentFee is required.")]
         public decimal StudentFee { get; set; }
 
+        public string ImageName { get; set; }
+
     }
 }

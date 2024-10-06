@@ -236,9 +236,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\EmpCRUD\EmpList.cshtml" />
     <Content Include="Views\Shared\Layout2.cshtml" />
     <Content Include="Views\StudCRUD\StudList.cshtml" />
@@ -259,10 +256,12 @@
     <Content Include="Views\Registration\AdminRegister.cshtml" />
     <Content Include="Views\Login\MainPage.cshtml" />
     <Content Include="Views\Fee\FeeList.cshtml" />
-    <Content Include="Views\Fee\AddFee.cshtml" />
+    <Content Include="Views\Fee\AddFeeStruct.cshtml" />
     <Content Include="Views\FeeCollection\FeeCollectionList.cshtml" />
     <Content Include="Views\FeeCollection\AddFeeCol.cshtml" />
     <Content Include="Views\StudCRUD\UploadStudent.cshtml" />
+    <Content Include="Views\StudCRUD\UploadImage.cshtml" />
+    <Content Include="Views\StudCRUD\ViewStudentImage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -181,7 +181,7 @@ namespace SMS.Repositories
         }
 
 
-        public FeeStructure GetById(int Id = 0)
+        public FeeStructure GetById(int Id)
         {
             FeeStructure obj = new FeeStructure();
 
@@ -191,7 +191,7 @@ namespace SMS.Repositories
                 cmd = new SqlCommand("proc_fee", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@FeeId", Id);
-                cmd.Parameters.AddWithValue("@Mode", 2);
+                cmd.Parameters.AddWithValue("@Mode", 1);
 
                 SqlDataReader sdr = cmd.ExecuteReader();
 
@@ -391,6 +391,136 @@ namespace SMS.Repositories
                     result = "Fail";
                 }
 
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return result;
+
+        }
+
+        internal decimal GetInstallation1ByClassId(int classid)
+        {
+            decimal result = 0;
+
+            try
+            {
+                con.Open();
+
+                cmd = new SqlCommand("proc_fee", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ClassId", classid);
+                cmd.Parameters.AddWithValue("@Mode", 8);
+
+                SqlDataReader sdr = cmd.ExecuteReader();
+
+                if (sdr.Read())
+                {
+                    if (!sdr.IsDBNull(0))
+                    {
+                        result = sdr.GetDecimal(0); // Read the decimal value
+                    }
+                    else
+                    {
+                        result = 0;
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return result;
+
+        }
+
+
+        internal decimal GetInstallation2ByClassId(int classid)
+        {
+            decimal result = 0;
+
+            try
+            {
+                con.Open();
+
+                cmd = new SqlCommand("proc_fee", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ClassId", classid);
+                cmd.Parameters.AddWithValue("@Mode", 9);
+
+                SqlDataReader sdr = cmd.ExecuteReader();
+
+                if (sdr.Read())
+                {
+                    if (!sdr.IsDBNull(0))
+                    {
+                        result = sdr.GetDecimal(0); // Read the decimal value
+                    }
+                    else
+                    {
+                        result = 0;
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return result;
+
+        }
+
+        internal decimal GetInstallation3ByClassId(int classid)
+        {
+            decimal result = 0;
+
+            try
+            {
+                con.Open();
+
+                cmd = new SqlCommand("proc_fee", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ClassId", classid);
+                cmd.Parameters.AddWithValue("@Mode", 10);
+
+                SqlDataReader sdr = cmd.ExecuteReader();
+
+                if (sdr.Read())
+                {
+                    if (!sdr.IsDBNull(0))
+                    {
+                        result = sdr.GetDecimal(0); // Read the decimal value
+                    }
+                    else
+                    {
+                        result = 0;
+                    }
+
+
+                }
             }
             catch (Exception ex)
             {

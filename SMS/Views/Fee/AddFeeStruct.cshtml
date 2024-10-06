@@ -1,0 +1,157 @@
+﻿@model SMS.Models.FeeStructure
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Fees</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
+
+    <style>
+        body {
+            background-color: #4B0082;
+        }
+
+        h2 {
+            color: #4c0070;
+        }
+
+        .container {
+            margin-top: 50px;
+            max-width: 600px;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #4c0070;
+            border-color: #4c0070;
+        }
+
+            .btn-primary:hover {
+                background-color: #320050;
+            }
+
+        .form-label {
+            color: #4c0070;
+        }
+
+        .form-control {
+            background-color: #E6E6FA; /* Light purple for input fields */
+        }
+
+        .form-select {
+            background-color: #E6E6FA; /* Light purple for dropdowns */
+            border: 1px solid #ced4da; /* Default border color */
+        }
+
+        .form-control:focus {
+            border-color: #4c0070;
+            box-shadow: 0 0 0 0.2rem rgba(76, 0, 112, 0.25);
+            background-color: #E6E6FA;
+        }
+
+        .alert {
+            margin-top: 20px;
+        }
+
+        .required:after {
+            content: "*";
+            color: red;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="text-center">Add Fees</h2>
+
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @using (Html.BeginForm("AddFeeStruct", "Fee", FormMethod.Post))
+                {
+                    if (Model.FeeId > 0)
+                    {
+                        <div>
+                            <strong style="color: #4c0070;">Fee ID assigned is: </strong> @Model.FeeId
+                        </div>
+                    }
+                    else if (ViewBag.MaxFeeStructId != null)
+                    {
+                        <div>
+                            <strong style="color: #4c0070;">Fee ID will be assigned as: </strong> @ViewBag.MaxFeeStructId
+                        </div>
+                    }
+
+                    @Html.HiddenFor(model => model.FeeId)
+
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.ClassId, "Select Class", new { @class = "form-label required" })
+                        @Html.DropDownListFor(model => model.ClassId, new SelectList(ViewBag.ClassList, "ClassId", "ClassName"),
+                            "-- Select --", new { @class = "form-select", @id = "classDropdown" })
+                        @Html.ValidationMessageFor(model => model.ClassId, "", new { @class = "text-danger" })
+
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.TotalFee, "Total Fee", new { @class = "form-label required" })
+                        @Html.TextBoxFor(model => model.TotalFee, new { @class = "form-control", type = "number", step = "0.01" })
+                        @Html.ValidationMessageFor(model => model.TotalFee, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.Installment1, "Installment 1", new { @class = "form-label required" })
+                        @Html.TextBoxFor(model => model.Installment1, new { @class = "form-control", type = "number", step = "0.01" })
+                        @Html.ValidationMessageFor(model => model.Installment1, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.Installment2, "Installment 2", new { @class = "form-label" })
+                        @Html.TextBoxFor(model => model.Installment2, new { @class = "form-control", type = "number", step = "0.01" })
+                        @Html.ValidationMessageFor(model => model.Installment2, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.Installment3, "Installment 3", new { @class = "form-label" })
+                        @Html.TextBoxFor(model => model.Installment3, new { @class = "form-control", type = "number", step = "0.01" })
+                        @Html.ValidationMessageFor(model => model.Installment3, "", new { @class = "text-danger" })
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Save Fee</button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

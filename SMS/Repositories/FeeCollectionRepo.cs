@@ -257,5 +257,136 @@ namespace SMS.Repositories
 
             return NextId;
         }
+
+        internal string  GetInstallation1ByStudId(int studid)
+                         
+        {
+            string result = string.Empty;
+
+            try
+            {
+                con.Open();
+
+                cmd = new SqlCommand("proc_feecol", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@StudentId", studid);
+                cmd.Parameters.AddWithValue("@Mode", 6);
+
+                SqlDataReader sdr = cmd.ExecuteReader();
+
+                if (sdr.Read())
+                {
+                    if (!sdr.IsDBNull(0))
+                    {
+                        result = sdr.GetString(0); // Read the decimal value
+                    }
+                    else
+                    {
+                        result = "false";
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return result;
+
+        }
+
+
+        internal string GetInstallation2ByStudId(int studid)
+
+        {
+            string result = string.Empty;
+
+            try
+            {
+                con.Open();
+
+                cmd = new SqlCommand("proc_feecol", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@StudentId", studid);
+                cmd.Parameters.AddWithValue("@Mode", 7);
+
+                SqlDataReader sdr = cmd.ExecuteReader();
+
+                if (sdr.Read())
+                {
+                    if (!sdr.IsDBNull(0))
+                    {
+                        result = sdr.GetString(0); // Read the decimal value
+                    }
+                    else
+                    {
+                        result = "false";
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return result;
+
+        }
+
+
+        internal string GetInstallation3ByStudId(int studid)
+
+        {
+            string result = string.Empty;
+
+            try
+            {
+                con.Open();
+
+                cmd = new SqlCommand("proc_feecol", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@StudentId", studid);
+                cmd.Parameters.AddWithValue("@Mode", 8);
+
+                SqlDataReader sdr = cmd.ExecuteReader();
+
+                if (sdr.Read())
+                {
+                    if (!sdr.IsDBNull(0))
+                    {
+                        result = sdr.GetString(0); // Read the decimal value
+                    }
+                    else
+                    {
+                        result = "false";
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return result;
+
+        }
     }
 }

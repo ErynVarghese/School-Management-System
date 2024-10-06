@@ -1,59 +1,125 @@
 ﻿@model SMS.Models.Department
 
 @{
-    Layout = "~/Views/Shared/Layout2.cshtml";
+    Layout = null;
 }
 
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>AddDept</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Department</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
+
+    <style>
+        body {
+            background-color: #4B0082;
+        }
+
+        h2 {
+            color: #4c0070;
+        }
+
+        .container {
+            margin-top: 50px;
+            max-width: 600px;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #4c0070;
+            border-color: #4c0070;
+        }
+
+            .btn-primary:hover {
+                background-color: #320050;
+            }
+
+        .form-label {
+            color: #4c0070;
+        }
+
+        .form-control {
+            background-color: #E6E6FA;
+        }
+
+            .form-control:focus {
+                border-color: #4c0070;
+                box-shadow: 0 0 0 0.2rem rgba(76, 0, 112, 0.25);
+            }
+
+        .alert {
+            margin-top: 20px;
+        }
+
+        .required:after {
+            content: "*";
+            color: red;
+            margin-left: 5px;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        @if (TempData["Success"] != null)
-        {
-            <div class="alert alert-success">@TempData["Success"]</div>
-        }
 
-        @if (TempData["Error"] != null)
-        {
-            <div class="alert alert-danger">@TempData["Error"]</div>
-        }
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="text-center">Add Department</h2>
 
-        @using (Html.BeginForm("AddDept", "Department", FormMethod.Post))
-        {
-            
-            if (Model.DeptId > 0)
-            {
-                <div>
-                    <strong>Department ID assigned is: </strong> @Model.DeptId
-                </div>
-            }
-            else if (ViewBag.MaxDeptId != null)
-            {
-                <div>
-                    <strong>Department ID will be assigned as: </strong> @ViewBag.MaxDeptId 
-                </div>
-            }
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
 
-            @Html.HiddenFor(model => model.DeptId)
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
 
-            <table class="table">
-                <tr>
-                    <td>
-                        @Html.LabelFor(model => model.DeptName)
-                    </td>
-                    <td>
-                        @Html.TextBoxFor(model => model.DeptName, new { @class = "form-control", type = "text", @pattern = "[A-Za-z  ]*" })
-                        @Html.ValidationMessageFor(model => model.DeptName)
-                    </td>
-                </tr>
-            </table>
+                @using (Html.BeginForm("AddDept", "Department", FormMethod.Post, new { id = "departmentForm" }))
+                {
 
-            <button type="submit" class="btn btn-primary">Save</button>
-        }
+                    if (Model.DeptId > 0)
+                    {
+                        <div>
+                            <strong style="color: #4c0070;">Department ID assigned is: </strong> @Model.DeptId
+                        </div>
+                    }
+                    else if (ViewBag.MaxDeptId != null)
+                    {
+                        <div>
+                            <strong style="color: #4c0070;">Department ID will be assigned as: </strong> @ViewBag.MaxDeptId
+                        </div>
+                    }
+
+                    @Html.HiddenFor(model => model.DeptId)
+
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.DeptName, "Department Name", new { @class = "form-label required" })
+                        @Html.TextBoxFor(model => model.DeptName, new { @class = "form-control", @pattern = "[A-Za-z ]*" })
+                        @Html.ValidationMessageFor(model => model.DeptName, "", new { @class = "text-danger" })
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Save Department</button>
+                }
+            </div>
+        </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

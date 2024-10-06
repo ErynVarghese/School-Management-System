@@ -1,128 +1,227 @@
 ﻿@model SMS.Models.FeeCollection
 
 @{
-    Layout = "~/Views/Shared/Layout2.cshtml";
+    Layout = null;
 }
 
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Fees</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
+
+    <style>
+        body {
+            background-color: #4B0082;
+        }
+
+        h2 {
+            color: #4c0070;
+        }
+
+        .container {
+            margin-top: 50px;
+            max-width: 600px;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #4c0070;
+            border-color: #4c0070;
+        }
+
+            .btn-primary:hover {
+                background-color: #320050;
+            }
+
+        .form-label {
+            color: #4c0070;
+        }
+
+        .form-control, .form-select {
+            background-color: #E6E6FA;
+        }
+
+            .form-control:focus {
+                border-color: #4c0070;
+                box-shadow: 0 0 0 0.2rem rgba(76, 0, 112, 0.25);
+            }
+
+        .alert {
+            margin-top: 20px;
+        }
+
+        .required:after {
+            content: "*";
+            color: red;
+            margin-left: 5px;
+        }
+    </style>
 </head>
 <body>
-    <div>
 
-        @if (TempData["Success"] != null)
-        {
-            <div class="alert alert-success">@TempData["Success"]</div>
-        }
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="text-center">Add Fees</h2>
 
-        @if (TempData["Error"] != null)
-        {
-            <div class="alert alert-danger">@TempData["Error"]</div>
-        }
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
 
-        <h2> Add Student </h2>
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
 
-        @using (Html.BeginForm("AddFeeCol", "FeeCollection", FormMethod.Post))
-        {
-            <table>
+                @using (Html.BeginForm("AddFeeCol", "FeeCollection", FormMethod.Post))
+                {
+                    @Html.HiddenFor(m => m.FeeColId)
 
-                @Html.HiddenFor(m => m.FeeColId)
-
-                <tr>
-                    <td>
-                        @Html.LabelFor(m => m.StudentId)
-                    </td>
-                    <td>
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.StudentId, "Student", new { @class = "form-label required" })
                         @Html.DropDownListFor(model => model.StudentId, new SelectList(ViewBag.StudentList, "StudentId", "StudentName"),
-                       "-- Select --", new { @class = "form-control", @id = "drpStudent" })
-                    </td>
-                </tr>
+                            "-- Select --", new { @class = "form-select", @id = "StudentId" })
+                        @Html.ValidationMessageFor(model => model.StudentId, "", new { @class = "text-danger" })
+                    </div>
 
-                <tr>
-                    <td>
-                        @Html.LabelFor(m => m.ClassId)
-                    </td>
-                    <td>
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.ClassId, "Class", new { @class = "form-label required" })
                         @Html.DropDownListFor(model => model.ClassId, new SelectList(ViewBag.ClassList, "ClassId", "ClassName"),
-                       "-- Select --", new { @class = "form-control", @id = "drpClass" })
-                    </td>
-                </tr>
+                            "-- Select --", new { @class = "form-select", @id = "classDropdown" })
+                        @Html.ValidationMessageFor(model => model.ClassId, "", new { @class = "text-danger" })
+                    </div>
 
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Installment1, "Installment 1", new { @class = "form-label" })
+                        @Html.CheckBox("Installment1", true, new { @disabled = "disabled", @id = "IsChecked1" })
 
-                <tr>
-                    <td>
-                        @Html.LabelFor(m => m.Installment1)
-                    </td>
-                    <td>
-                        @Html.CheckBox("Installment1", true, new { @disabled = "disabled" })
-                    </td>
-                </tr>
+                    </div>
 
-                <tr>
-                    <td>
-                        @Html.LabelFor(m => m.Installment2)
-                    </td>
-                    <td>
-                        @Html.CheckBox("Installment2",  true, new { @disabled = "disabled"})
-                    </td>
-                </tr>
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Installment2, "Installment 2", new { @class = "form-label" })
+                        @Html.CheckBox("Installment2", true, new { @disabled = "disabled", @id = "IsChecked2" })
+                    </div>
 
-                <tr>
-                    <td>
-                        @Html.LabelFor(m => m.Installment3)
-                    </td>
-                    <td>
-                        @Html.CheckBox("Installment3", true, new { @disabled = "disabled" })
-                    </td>
-                </tr>
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Installment3, "Installment 3", new { @class = "form-label" })
+                        @Html.CheckBox("Installment3", true, new { @disabled = "disabled", @id = "IsChecked3" })
+                    </div>
 
+                    @Html.HiddenFor(m => m.FeeStatus)
+                    @Html.HiddenFor(m => m.ClassName)
+                    @Html.HiddenFor(m => m.StudentName)
 
-
-                @Html.HiddenFor(m => m.FeeStatus)
-
-
-                @Html.HiddenFor(m => m.ClassName)
-
-                @Html.HiddenFor(m => m.StudentName)
-
-               
-            </table>
-
-            <button type="submit" class="btn btn-primary">Save</button>
-
-
-
-        }
-
+                    <button type="submit" class="btn btn-primary w-100">Save Fees</button>
+                }
+            </div>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 
-
     <script type="text/javascript">
         $(document).ready(function () {
-
-            $("#divPageload").show();
-            $('#drpStudent').attr('disabled', true);
-
-            $("#divPageload").hide();
+            // Initially disable the StudentId dropdown
+            $('#StudentId').attr('disabled', true);
         });
 
+        // Handle ClassId dropdown change
+        $('#classDropdown').change(function () {
+            $('#StudentId').attr('disabled', false);
+            var classId = $(this).val();
 
-        $('#drpClass').change(function () {
-            $('#drpStudent').attr('disabled', false);
+            // Make AJAX request to get installation values if a class is selected
+            if (classId) {
+                // Enable StudentId dropdown after class selection
+                 $.ajax({
+                    url: '@Url.Action("GetStudentsByClassId", "StudCRUD")',
+                    type: 'GET',
+                    data: { classId: classId },
+                    success: function (data) {
+                        $('#StudentId').empty().append('<option value="">-- Select Section --</option>');
+                        $.each(data, function (index, item) {
+                            $('#StudentId').append('<option value="' + item.StudentId + '">' + item.StudentName + '</option>');
+                        });
+                    },
+                    error: function () {
+                        alert('Error loading sections.');
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("GetInstallations", "FeeCollection")',  // Change to your action method URL
+                    type: 'GET',
+                    data: { classId: classId },
+                    success: function (response) {
+                        // Assuming response contains installation1, installation2, installation3
+                        $('#Installation1').val(response[0]);
+                        $('#Installation2').val(response[1]);
+                        $('#Installation3').val(response[2]);
+                    },
+                    error: function () {
+                        alert('Error fetching installations.');
+                    }
+                });
+            } else {
+                // Clear installation fields and disable StudentId dropdown if no class is selected
+                $('#Installation1, #Installation2, #Installation3').val('');
+                $('#StudentId').attr('disabled', true);
+            }
         });
 
-        $('#drpCategory').change(function () {
-            $('#drpSubCategory').attr('disabled', false);
-        });
+        // Handle StudentId dropdown change
+        $('#StudentId').change(function () {
+            // Get the value of classDropdown
+            var classId = $('#classDropdown').val();
 
+            // Only proceed if a class has been selected
+            if (classId) {
+                var studentId = $(this).val();
+
+                // Make AJAX request to check the checkbox status only if studentId is selected
+                if (studentId) {
+                    $.ajax({
+                        url: '@Url.Action("GetInstallationsByStudId", "FeeCollection")',  // Change to your action method URL
+                        type: 'GET',
+                        data: { studentId: studentId },
+                        success: function (response) {
+                            // Assuming response contains isChecked (true/false)
+                            $('#IsChecked1').prop('checked', response[0]); // Check status for installation 1
+                            $('#IsChecked2').prop('checked', response[1]); // Check status for installation 2
+                            $('#IsChecked3').prop('checked', response[2]);
+                        },
+                        error: function () {
+                            alert('Error fetching checkbox status.');
+                        }
+                    });
+                } else {
+                    // Uncheck the checkboxes if no student is selected
+                    $('#IsChecked1').prop('checked', false);
+                    $('#IsChecked2').prop('checked', false);
+                    $('#IsChecked3').prop('checked', false);
+                }
+            }
+        });
+    });
     </script>
 
 
-</body >
+
+</body>
 </html >

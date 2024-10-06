@@ -1,0 +1,31 @@
+﻿@model SMS.Models.Student
+
+@{
+    Layout = null;
+
+    ViewBag.Title = "View Student Image";
+}
+
+<h2>View Student Image</h2>
+
+@using (Html.BeginForm("ViewStudentImage", "StudCRUD", FormMethod.Post))
+{
+
+
+    <div>
+        @Html.Label("Student ID")
+        @Html.TextBox("StudentId", Model?.StudentId, new { @class = "form-control" }) <!-- Input for Student ID -->
+    </div>
+
+    <button type="submit">Submit</button>
+}
+
+@if (ViewBag.ImagePath != null)
+{
+    <h3>Student Image:</h3>
+    <img src="@ViewBag.ImagePath" alt="Student Image" style="max-width: 300px; max-height: 300px;" />
+}
+else if (ViewBag.Message != null)
+{
+    <p>@ViewBag.Message</p>
+}

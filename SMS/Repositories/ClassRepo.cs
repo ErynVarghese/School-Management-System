@@ -295,5 +295,53 @@ namespace SMS.Repositories
 
         }
 
+
+        internal string CheckClassId(int classid)
+        {
+            string result = string.Empty;
+
+            try
+            {
+                con.Open();
+
+                SqlCommand checkCmd = new SqlCommand("proc_class", con);
+                checkCmd.CommandType = CommandType.StoredProcedure;
+                checkCmd.Parameters.AddWithValue("@ClassId", classid);
+                checkCmd.Parameters.AddWithValue("@mode", 7); ;
+
+                bool classExists = false;
+
+                SqlDataReader reader = checkCmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    classExists = reader.GetInt32(0) > 0;
+                }
+
+                if (!classExists)
+                {
+                    result = "Error";
+                }
+
+                else
+                {
+                    result = "Success";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return result;
+
+        }
+
     }
 }
