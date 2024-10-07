@@ -1,52 +1,121 @@
 ﻿@model SMS.Models.Student
 
-@using (Html.BeginForm("UploadImage", "StudCRUD", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-
-    if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @TempData["Error"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-
-
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
-
-    <div>
-        @Html.LabelFor(m => m.StudentId)
-        @Html.TextBoxFor(m => m.StudentId)
-    </div>
-
-    <div>
-        <label>Upload Image</label>
-        <input type="file" name="fileUpload" />
-    </div>
-
-    <button type="submit">Update Image</button>
+@{
+    Layout = null;
 }
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="alert alert-danger">
-        <strong>Errors:</strong>
-        <ul>
-            @foreach (var state in ViewData.ModelState)
-            {
-                if (state.Value.Errors.Count > 0)
-                {
-                    <li>@state.Key: @state.Value.Errors[0].ErrorMessage</li>
-                }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Student Image</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
+
+    <style>
+        body {
+            background-color: #4B0082;
+        }
+
+        h2 {
+            color: #4c0070;
+        }
+
+        .container {
+            margin-top: 50px;
+            max-width: 600px;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #4c0070;
+            border-color: #4c0070;
+        }
+
+            .btn-primary:hover {
+                background-color: #320050;
             }
-        </ul>
-    </div>
-}
 
+        .form-label {
+            color: #4c0070;
+        }
+
+        .form-control {
+            background-color: #E6E6FA; /* Light purple for input fields */
+        }
+
+        .form-select {
+            background-color: #E6E6FA; /* Light purple for dropdowns */
+            border: 1px solid #ced4da; /* Default border color */
+        }
+
+        .form-control:focus {
+            border-color: #4c0070;
+            box-shadow: 0 0 0 0.2rem rgba(76, 0, 112, 0.25);
+            background-color: #E6E6FA;
+        }
+
+        .alert {
+            margin-top: 20px;
+        }
+
+        .required:after {
+            content: "*";
+            color: red;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="text-center">Update Student Image</h2>
+
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @using (Html.BeginForm("UploadImage", "StudCRUD", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.StudentId, "Select Student", new { @class = "form-label required" })
+                        @Html.DropDownListFor(model => model.StudentId, new SelectList(ViewBag.StudentList, "StudentId", "StudentName"),
+                            "-- Select --", new { @class = "form-select", @id = "classDropdown" })
+                        @Html.ValidationMessageFor(model => model.StudentId, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Upload Image</label>
+                        <input type="file" name="fileUpload" class="form-control" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Update Image</button>
+                }
+
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

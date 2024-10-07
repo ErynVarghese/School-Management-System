@@ -35,6 +35,9 @@ namespace SMS.Controllers
             sectionlist = sectionRepo.GetAll();
             ViewBag.SectionList = sectionlist;
 
+            sList = studrepo.GetAll();
+            ViewBag.StudentList = sList;
+
             ViewBag.MaxStudId = studrepo.GetNextId();
 
         }
@@ -358,7 +361,7 @@ namespace SMS.Controllers
                             errorMessage += $"Row {r}: Invalid Student Fee. ";
                         }
 
-                        // If there are no validation errors, create the student
+                    
                         if (string.IsNullOrEmpty(errorMessage))
                         {
                             Student student = new Student
@@ -384,7 +387,7 @@ namespace SMS.Controllers
                         }
                     }
 
-                    // After the loop, handle validation errors as needed
+                    
                     if (validationErrors.Any())
                     {
                         TempData["Error"] = string.Join("<br>", validationErrors);
@@ -404,7 +407,7 @@ namespace SMS.Controllers
                     {
                         string updateresult = studrepo.Update(stud);
 
-                        // Skip if the creation failed
+                      
                         if (updateresult != "Success")
                         {
                             failedCount++;
@@ -416,7 +419,7 @@ namespace SMS.Controllers
                     {
                         string createresult = studrepo.Create(stud);
 
-                        // Skip if the creation failed
+                      
                         if (createresult != "Success")
                         {
                             failedCount++;
@@ -450,24 +453,24 @@ namespace SMS.Controllers
         public ActionResult UploadImage()
         {
 
-            return View(); // Return the view with the fetched student data
+            return View(); 
         }
 
 
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+       
         public ActionResult UploadImage(Student student, System.Web.HttpPostedFileBase fileUpload)
         {
            
-                // Check if an image file was uploaded
+             
                 if (fileUpload != null && fileUpload.ContentLength > 0)
                 {
-                    // Generate a unique file name
+                   
                     string fileName = Path.GetFileName(fileUpload.FileName);
                     string uploadPath = Path.Combine(Server.MapPath("~/UploadedImages"));
 
-                    // Ensure the upload directory exists
+             
                     if (!Directory.Exists(uploadPath))
                     {
                         Directory.CreateDirectory(uploadPath);
@@ -475,72 +478,80 @@ namespace SMS.Controllers
 
                     string filePath = Path.Combine(uploadPath, fileName);
 
-                    // Save the image to the folder
-                    try
+                // Check if the file already exists
+                if (System.IO.File.Exists(filePath))
+                {
+                   
+                    TempData["Error"] = "A file with the same name already exists. Please rename the file and try again.";
+                    return RedirectToAction("UploadImage"); 
+                }
+
+                try
                     {
                         fileUpload.SaveAs(filePath);
                     }
                     catch (Exception ex)
                     {
-                        ModelState.AddModelError("", "Error saving the image: " + ex.Message);
+                        TempData["ErrorMessage"] = "Error saving the image: " + ex.Message;
                         return View(student);
                     }
 
 
-                    // Use the AddImage method from your repository to update the student's image
-                    StudentRepo studentRepo = new StudentRepo(); // Assuming StudentRepo is the class containing your AddImage method
+                    
+                    StudentRepo studentRepo = new StudentRepo(); 
                     string result = studentRepo.AddImage(student.StudentId, fileName);
 
                     // Check the result and handle accordingly
                     if (result == "Success")
                     {
                           TempData["Success"] = "uploaded successfully!";
-                        // Redirect to the index or another action after saving
+                 
                         return RedirectToAction("UploadImage");
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Failed to update the student's image.");
+                           TempData["Error"] = "Failed to update the student's image.";
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Please upload a valid image file.");
+                    TempData["Error"] = "Upload a valid image";
                 }
             
 
             return View(student);
         }
 
-        // Action to view the student's image
+  
 
-           
 
-            // GET: Display the form for entering Student ID
             [HttpGet]
             public ActionResult ViewStudentImage()
             {
-                return View(new Student()); // Return an empty Student model
+                return View(new Student()); 
             }
 
-            // POST: Handle form submission
+
             [HttpPost]
             
             public ActionResult ViewStudentImage(int studentId)
             {
-                // Fetch the image for the provided Student ID
+             
                 string imageName = studrepo.GetStudentImage(studentId);
 
-                if (!string.IsNullOrEmpty(imageName))
+                if (!string.IsNullOrEmpty(imageName) && (imageName != "not"))
                 {
-                    ViewBag.ImagePath = Url.Content("~/UploadedImages/" + imageName); // Path for existing image
-                }
+                    ViewBag.ImagePath = Url.Content("~/UploadedImages/" + imageName); 
+                } else if (!string.IsNullOrEmpty(imageName) && (imageName == "not"))
+            {
+                TempData["Error"] = "The student doesnt have an image uploaded yet!";
+            }
                 else
                 {
-                    ViewBag.Message = "No image found for this Student ID.";
+                TempData["Error"] = "No image found for this Student ID.";
                 }
 
-                return View(new Student { StudentId = studentId }); // Return the same view with the student ID
+                return View(new Student { StudentId = studentId }); 
             }
         
 
