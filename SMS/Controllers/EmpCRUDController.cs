@@ -8,6 +8,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using SMS.Repositories;
+using OfficeOpenXml; // Make sure to include this namespace
+using System.IO;
 
 
 namespace SMS.Controllers
@@ -21,10 +23,15 @@ namespace SMS.Controllers
 
         List<Department> deptlist = new List<Department>();
 
+        List<Employer> emplist = new List<Employer>();
+
         public EmpCRUDController()
         {
             deptlist = deptrepo.GetAll();
             ViewBag.DeptList = deptlist;
+
+            emplist = emprepo.GetAll();
+            ViewBag.EmpList = emplist;
 
             ViewBag.MaxDeptId = deptrepo.GetNextId();
 
@@ -147,6 +154,66 @@ namespace SMS.Controllers
 
             //modify below 
             return RedirectToAction("GetList");
+        }
+
+
+        public ActionResult ExportToExcel()
+        {
+
+            if (emplist == null || !emplist.Any())
+            {
+                TempData["Error"] = "No employee data available to export.";
+                return RedirectToAction("EmpList");
+            }
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+
+            try
+            {
+
+
+                using (ExcelPackage excel = new ExcelPackage())
+                {
+                    var workSheet = excel.Workbook.Worksheets.Add("Employees");
+                    workSheet.Cells[1, 1].Value = "Employee ID";
+                    workSheet.Cells[1, 2].Value = "Employee Name";
+                    workSheet.Cells[1, 3].Value = "Contact Number";
+                    workSheet.Cells[1, 4].Value = "Email";
+                    workSheet.Cells[1, 5].Value = "Date of Birth";
+                    workSheet.Cells[1, 6].Value = "Department ID";
+                    workSheet.Cells[1, 7].Value = "Date of Joining";
+
+                    int row = 2;
+
+                    foreach (var emp in emplist)
+                    {
+                        workSheet.Cells[row, 1].Value = emp.EmpId;
+                        workSheet.Cells[row, 2].Value = emp.EmpName;
+                        workSheet.Cells[row, 3].Value = emp.ContactNo;
+                        workSheet.Cells[row, 4].Value = emp.Email;
+                        workSheet.Cells[row, 5].Value = emp.DOB?.ToString("dd-MM-yyyy");
+                        workSheet.Cells[row, 6].Value = emp.DeptId;
+                        workSheet.Cells[row, 7].Value = emp.DOJ?.ToString("dd-MM-yyyy");
+                        row++;
+                    }
+
+                    workSheet.Cells.AutoFitColumns();
+
+
+                    using (var stream = new MemoryStream())
+                    {
+                        excel.SaveAs(stream);
+                        var fileName = "EmployeeList.xlsx";
+                        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error occured" + ex.Message;
+                return RedirectToAction("EmpList");
+            }
         }
 
 

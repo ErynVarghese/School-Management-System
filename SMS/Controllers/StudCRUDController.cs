@@ -461,8 +461,7 @@ namespace SMS.Controllers
         [HttpPost]
        
         public ActionResult UploadImage(Student student, System.Web.HttpPostedFileBase fileUpload)
-        {
-           
+        {       
              
                 if (fileUpload != null && fileUpload.ContentLength > 0)
                 {
@@ -478,7 +477,7 @@ namespace SMS.Controllers
 
                     string filePath = Path.Combine(uploadPath, fileName);
 
-                // Check if the file already exists
+               
                 if (System.IO.File.Exists(filePath))
                 {
                    
@@ -496,12 +495,11 @@ namespace SMS.Controllers
                         return View(student);
                     }
 
-
                     
                     StudentRepo studentRepo = new StudentRepo(); 
                     string result = studentRepo.AddImage(student.StudentId, fileName);
 
-                    // Check the result and handle accordingly
+                   
                     if (result == "Success")
                     {
                           TempData["Success"] = "uploaded successfully!";
@@ -554,8 +552,6 @@ namespace SMS.Controllers
                 return View(new Student { StudentId = studentId }); 
             }
         
-
-
 
     }
 

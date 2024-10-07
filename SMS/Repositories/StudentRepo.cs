@@ -48,6 +48,7 @@ namespace SMS.Repositories
                     stud.StudentUsername = sdr.GetString(8);
                     stud.StudentPassword = sdr.GetInt32(9);
                     stud.StudentFee = sdr.GetDecimal(10);
+                    stud.ImageName = sdr.GetString(11);
 
                     studlist.Add(stud);
                 }
@@ -84,6 +85,9 @@ namespace SMS.Repositories
                 cmd.Parameters.AddWithValue("@StudentUsername", obj.StudentUsername);
                 cmd.Parameters.AddWithValue("@StudentPassword", obj.StudentPassword);
                 cmd.Parameters.AddWithValue("@StudentFee", obj.StudentFee);
+                //add default image name directly as "not"
+                cmd.Parameters.AddWithValue("@ImageName", "not");
+
                 cmd.Parameters.AddWithValue("@Mode", 2);
                 
                 int status = cmd.ExecuteNonQuery();
@@ -132,6 +136,7 @@ namespace SMS.Repositories
                 cmd.Parameters.AddWithValue("@StudentUsername", obj.StudentUsername);
                 cmd.Parameters.AddWithValue("@StudentPassword", obj.StudentPassword);
                 cmd.Parameters.AddWithValue("@StudentFee", obj.StudentFee);
+                cmd.Parameters.AddWithValue("@ImageName", obj.ImageName);
                 cmd.Parameters.AddWithValue("@Mode", 3);
 
                 int status = cmd.ExecuteNonQuery();
@@ -233,6 +238,7 @@ namespace SMS.Repositories
                     obj.StudentUsername = sdr.GetString(8);
                     obj.StudentPassword = sdr.GetInt32(9);
                     obj.StudentFee = sdr.GetDecimal(10);
+                   //obj.ImageName = sdr.getstring
                 }
             } 
             catch(Exception ex) 
