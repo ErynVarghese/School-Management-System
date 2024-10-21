@@ -261,7 +261,7 @@ namespace SMS.Controllers
                     Session["AdminPassword"] = Convert.ToInt32(ds.Tables[0].Rows[0]["AdminPassword"]);
 
                     TempData["Success"] = "Login Successfull";
-                    return RedirectToAction("MainPage", "Login");
+                    return RedirectToAction("AdminRegister", "Registration");
                 }
 
 

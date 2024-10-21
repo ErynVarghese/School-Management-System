@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<SMS.Models.Employer>
 
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/MainLayout.cshtml";
 }
 
 <!DOCTYPE html>
@@ -12,10 +12,10 @@
     <title>Employee List</title>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />-->
 
     <!-- DataTables CSS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" />
+    <!--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" />-->
 
 
 </head>
@@ -92,21 +92,9 @@
         }
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    @*<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>*@
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#empTable').DataTable({
-                "aaSorting": [[0, "asc"]],
-                responsive: true,
-                columnDefs: [{
-                    "defaultContent": "-",
-                    "targets": "_all"
-                }]
-            });
-        });
-    </script>
 
 </body>
 </html>

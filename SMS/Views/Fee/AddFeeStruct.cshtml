@@ -14,60 +14,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
 
     <style>
-        body {
-            background-color: #4B0082;
+        html, body {
+            height: 100%; /* Make sure the HTML and body take full height */
+            margin: 0; /* Remove default margin */
         }
 
-        h2 {
-            color: #4c0070;
+        .wrapper {
+            display: flex; /* Use flexbox for layout */
+            height: 100vh; /* Full viewport height */
         }
 
-        .container {
-            margin-top: 50px;
-            max-width: 600px;
+        #sidebar {
+            background-color: #024950; /* Sidebar color */
+            color: white; /* Text color in sidebar */
+            min-width: 250px; /* Minimum width of the sidebar */
         }
 
-        .card {
-            border: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-primary {
-            background-color: #4c0070;
-            border-color: #4c0070;
-        }
-
-            .btn-primary:hover {
-                background-color: #320050;
-            }
-
-        .form-label {
-            color: #4c0070;
-        }
-
-        .form-control {
-            background-color: #E6E6FA; /* Light purple for input fields */
-        }
-
-        .form-select {
-            background-color: #E6E6FA; /* Light purple for dropdowns */
-            border: 1px solid #ced4da; /* Default border color */
-        }
-
-        .form-control:focus {
-            border-color: #4c0070;
-            box-shadow: 0 0 0 0.2rem rgba(76, 0, 112, 0.25);
-            background-color: #E6E6FA;
-        }
-
-        .alert {
-            margin-top: 20px;
-        }
-
-        .required:after {
-            content: "*";
-            color: red;
-            margin-left: 5px;
+        #content {
+            flex: 1; /* Take the remaining space */
+            background-color: #f8f9fa; /* Optional: Content background color */
+            padding: 20px; /* Add some padding */
         }
     </style>
 </head>

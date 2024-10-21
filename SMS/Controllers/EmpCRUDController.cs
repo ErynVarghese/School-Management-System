@@ -162,17 +162,14 @@ namespace SMS.Controllers
 
             if (emplist == null || !emplist.Any())
             {
-                TempData["Error"] = "No employee data available to export.";
+                TempData["Error"] = "No employee data available to export!";
                 return RedirectToAction("EmpList");
             }
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-
             try
             {
-
-
                 using (ExcelPackage excel = new ExcelPackage())
                 {
                     var workSheet = excel.Workbook.Worksheets.Add("Employees");

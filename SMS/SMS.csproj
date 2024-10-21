@@ -262,6 +262,7 @@
     <Content Include="Views\StudCRUD\UploadStudent.cshtml" />
     <Content Include="Views\StudCRUD\UploadImage.cshtml" />
     <Content Include="Views\StudCRUD\ViewStudentImage.cshtml" />
+    <Content Include="Views\Shared\MainLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

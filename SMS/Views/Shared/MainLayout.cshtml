@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
+
+    <style>
+    /* Sidebar styling */
+        .sidebar {
+            margin: 0;
+            padding: 0;
+            width: 250px;
+            background-color: #4B0082; /* Light Lavender */
+            position: fixed;
+            height: 100%;
+            overflow: auto;
+            border-right: 5px solid #4B0082;
+        }
+
+            .sidebar a {
+                display: block;
+                color: #E6E6FA; /* Indigo text color (default) */
+                padding: 16px;
+                text-decoration: none;
+                /*font-weight: bold; /* Bold text */
+            }
+
+    /* Active (selected) link */
+                .sidebar a.active {
+                    background-color: #E6E6FA; /* Dark Purple background for active item */
+                    color: #E6E6FA; /* Light Lavender text for active item */
+                    border-bottom: 2px solid #4B0082;
+                }
+
+    /* Hover effect for non-active links */
+                .sidebar a:hover:not(.active) {
+                    background-color: #E6E6FA; /* Dark Purple background on hover */
+                    color: #4B0082; /* Light Lavender text on hover */
+                }
+
+        body {
+            background-color: #E6E6FA; /* Light lavender background for the entire page */
+            margin: 0; /* Remove any default margin */
+            padding: 0; /* Remove any default padding */
+        }
+
+    /* Page content */
+        /* Page content. Adjust margin to account for sidebar width */
+        .content {
+            margin-left: 250px; /* Updated to match the sidebar width */
+            padding: 20px;
+            background-color: #E6E6FA; /* White background for content*/
+        }
+
+    @*/* Media query for small screens */
+    @media screen and (max-width: 700px) {
+        .sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+        .sidebar a {
+            float: left;
+        }
+        .content {
+            margin-left: 0;
+        }
+    }
+
+    @media screen and (max-width: 400px) {
+        .sidebar a {
+            text-align: center;
+            float: none;
+        }
+    }*@
+    </style>
+
+
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        @Html.ActionLink("Application name", "Index", "Home", null, new { @class = "nav-link active" })
+        <a href="~/EmpCRUD/EmpList">Employee List</a>
+        <a href="~/StudCRUD/AddStud">Add a Student</a>
+        <a href="~/StudCRUD/UploadImage">Add Student Image</a>
+        <a href="~/StudCRUD/UploadStudent">Upload as Excel File</a>
+        <a href="~/StudCRUD/ViewStudentImage">View students image</a>
+        <a href="~/EmpCRUD/AddEmp">Add an Employee</a>
+    </div>
+
+    <!-- Main content -->
+    <div class="content">
+        @RenderBody()
+        @*<hr />*@
+        @*<footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>*@
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#studentTable').DataTable({
+                "aaSorting": [[0, "desc"]],
+                responsive: true,
+                columnDefs: [{
+                    "defaultContent": "-",
+                    "targets": "_all"
+                }]
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,35 +1,97 @@
 ﻿@{
-    Layout = null;
+    Layout = "~/Views/Shared/MainLayout.cshtml";
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Students</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #4B0082;
+        }
+
+        h2 {
+            color: #4c0070;
+        }
+
+        .container {
+            margin-top: 50px;
+            max-width: 600px;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #E6E6FA;
+        }
+
+        .btn-primary {
+            background-color: #4c0070;
+            border-color: #4c0070;
+        }
+
+            .btn-primary:hover {
+                background-color: #320050;
+            }
+
+        .form-label {
+            color: #4c0070;
+        }
+
+        .form-control {
+            background-color: #E6E6FA; /* Light purple for input fields */
+            border: 1px solid #ced4da; /* Default border color */
+        }
+
+            .form-control:focus {
+                border-color: #4c0070;
+                box-shadow: 0 0 0 0.2rem rgba(76, 0, 112, 0.25);
+                background-color: #E6E6FA;
+            }
+
+        .alert {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2>Upload Student Records</h2>
-        @if (TempData["Success"] != null)
-        {
-            <div class="alert alert-success">@TempData["Success"]</div>
-        }
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="text-center">Upload Student Records</h2>
 
-        @if (TempData["Error"] != null)
-        {
-    <div class="alert alert-danger">@Html.Raw(TempData["Error"].ToString())</div>
-        }
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
 
-        @using (Html.BeginForm("UploadStudent", "StudCRUD", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-            <div class="form-group">
-                <label for="fileUpload">Select Excel File:</label>
-                <input type="file" class="form-control-file" id="fileUpload" name="fileUpload" accept=".xls,.xlsx" required />
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @Html.Raw(TempData["Error"].ToString())
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @using (Html.BeginForm("UploadStudent", "StudCRUD", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="mb-3">
+                        <label for="fileUpload" class="form-label">Select Excel File:</label>
+                        <input type="file" class="form-control" id="fileUpload" name="fileUpload" accept=".xls,.xlsx" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Upload</button>
+                }
             </div>
-            <button type="submit" class="btn btn-primary">Upload</button>
-        }
+        </div>
     </div>
+
+
 </body>
 </html>
