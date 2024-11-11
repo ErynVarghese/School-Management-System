@@ -19,13 +19,13 @@ namespace SMS.Models
         public int ClassId { get; set; }
 
        
-        public string Installment1 { get; set; }
+        public bool Installment1 { get; set; }
 
         
-        public string Installment2 { get; set; }
+        public bool Installment2 { get; set; }
 
      
-        public string Installment3 { get; set; }
+        public bool Installment3 { get; set; }
 
        
         public string FeeStatus { get; set; }

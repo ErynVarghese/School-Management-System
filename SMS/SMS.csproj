@@ -255,9 +255,9 @@
     <Content Include="Views\Login\AdminAuthentication.cshtml" />
     <Content Include="Views\Registration\AdminRegister.cshtml" />
     <Content Include="Views\Login\MainPage.cshtml" />
-    <Content Include="Views\Fee\FeeList.cshtml" />
+    <Content Include="Views\Fee\FeeStructList.cshtml" />
     <Content Include="Views\Fee\AddFeeStruct.cshtml" />
-    <Content Include="Views\FeeCollection\FeeCollectionList.cshtml" />
+    <Content Include="Views\FeeCollection\FeeColList.cshtml" />
     <Content Include="Views\FeeCollection\AddFeeCol.cshtml" />
     <Content Include="Views\StudCRUD\UploadStudent.cshtml" />
     <Content Include="Views\StudCRUD\UploadImage.cshtml" />

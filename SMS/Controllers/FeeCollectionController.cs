@@ -35,6 +35,8 @@ namespace SMS.Controllers
             classlist = classRepo.GetAll();
             ViewBag.ClassList = classlist;
 
+
+
             studlist = studRepo.GetAll();
             ViewBag.StudentList = studlist;
 
@@ -42,13 +44,23 @@ namespace SMS.Controllers
 
         }
 
-
-        public ActionResult FeeColList()
+        [HttpGet]
+        public ActionResult FeeColList(int? classId)
         {
             List<FeeCollection> fList = new List<FeeCollection>();
 
-            fList = feecolrepo.GetAll();
+            if (classId.HasValue)
+            {
+                // Filter the FeeCollection records based on the selected ClassId
+                fList = feecolrepo.GetAll().Where(f => f.ClassId == classId.Value).ToList();
+            }
+            else
+            {
+                // If no ClassId is selected, return all records
+                fList = feecolrepo.GetAll();
+            }
 
+            // Pass the filtered list to the view
             return View(fList);
         }
 
@@ -76,6 +88,7 @@ namespace SMS.Controllers
             {
                 try
                 {
+                    Debug.WriteLine(feecol.FeeColId);
                     if (feecol.FeeColId > 0)
                     {
                         string result = feecolrepo.Update(feecol);
@@ -105,8 +118,11 @@ namespace SMS.Controllers
                 }
                 catch (Exception ex)
                 {
+                    Debug.WriteLine(ex.Message);
+                   
                     TempData["Error"] = "Failed to update/create...";
                     throw ex.InnerException;
+                   
                 }
             }
             else
@@ -117,36 +133,17 @@ namespace SMS.Controllers
             return View(feecol);
         }
 
-        /**
 
-                [HttpGet]
-                public JsonResult GetSectionsByClassId(int classId)
-                {
-                    List<Section> sList = sectionRepo.GetSectionsByClassId(classId);
-                    return Json(sList, JsonRequestBehavior.AllowGet);
-                }
-
-
-                [HttpGet]
-                public JsonResult GetClassFeeById(int classId)
-                {
-
-                    decimal classFee = feestructrepo.GetClassFeeById(classId);
-                    return Json(classFee, JsonRequestBehavior.AllowGet);
-                }
-
-        **/
 
 
         public JsonResult GetInstallations(int classId)
         {
-            // Replace this with your actual database fetching logic
-            // Assuming you are fetching three decimal values related to classId from your DB
+   
             List<decimal> installations = new List<decimal>();
 
-            var installation1 = feestructrepo.GetInstallation1ByClassId(classId); // Fetch from DB
-            var installation2 = feestructrepo.GetInstallation2ByClassId(classId); // Fetch from DB
-            var installation3 = feestructrepo.GetInstallation3ByClassId(classId); // Fetch from DB
+            var installation1 = feestructrepo.GetInstallation1ByClassId(classId); 
+            var installation2 = feestructrepo.GetInstallation2ByClassId(classId); 
+            var installation3 = feestructrepo.GetInstallation3ByClassId(classId); 
 
             installations.Add(installation1);
             installations.Add(installation2);
@@ -158,13 +155,12 @@ namespace SMS.Controllers
 
         public JsonResult GetInstallationsByStudId(int studid)
         {
-            // Replace this with your actual database fetching logic
-            // Assuming you are fetching three decimal values related to classId from your DB
+
             List<bool> installations = new List<bool>();
 
-            bool installation1 = feecolrepo.GetInstallation1ByStudId(studid).ToLower() == "true"; // Fetch from DB
-            bool installation2 = feecolrepo.GetInstallation2ByStudId(studid).ToLower() == "true"; // Fetch from DB
-            bool installation3 = feecolrepo.GetInstallation3ByStudId(studid).ToLower() == "true"; // Fetch from DB
+            bool installation1 = feecolrepo.GetInstallation1ByStudId(studid) == true; 
+            bool installation2 = feecolrepo.GetInstallation2ByStudId(studid) == true; 
+            bool installation3 = feecolrepo.GetInstallation3ByStudId(studid) == true; 
 
 
             installations.Add(installation1);

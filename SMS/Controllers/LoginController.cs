@@ -31,13 +31,16 @@ namespace SMS.Controllers
         {
             if (type == "Employer")
             {
+                Session["UserType"] = "Employer";
                 return RedirectToAction("EmpAuthentication", "Login");
 
             } else if (type == "Student")
             {
+                Session["UserType"] = "Student";
                 return RedirectToAction("StudAuthentication", "Login");
             } else if (type == "Admin")
             {
+                Session["UserType"] = "Admin";
                 return RedirectToAction("AdminAuthentication", "Login");
             }
             else

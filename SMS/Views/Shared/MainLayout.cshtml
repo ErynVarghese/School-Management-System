@@ -13,6 +13,30 @@
 
     <style>
     /* Sidebar styling */
+
+        /* Custom styles for DataTables header */
+        #tblAll thead {
+            background-color: #4B0082; /* Dark purple background */
+            color: #E6E6FA; /* Light lavender text */
+            font-size: 14px; /* Adjust font size as needed */
+        }
+
+            /* Add border to header cells */
+            #tblAll thead th {
+                border-bottom: 2px solid #E6E6FA;
+                padding: 10px;
+            }
+
+        /* Optional: Style the table rows for visual enhancement */
+        #tblAll tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #tblAll tbody tr:hover {
+            background-color: #e6e6fa;
+        }
+
+
         .sidebar {
             margin: 0;
             padding: 0;
@@ -52,34 +76,14 @@
         }
 
     /* Page content */
-        /* Page content. Adjust margin to account for sidebar width */
+   
         .content {
             margin-left: 250px; /* Updated to match the sidebar width */
             padding: 20px;
             background-color: #E6E6FA; /* White background for content*/
         }
 
-    @*/* Media query for small screens */
-    @media screen and (max-width: 700px) {
-        .sidebar {
-            width: 100%;
-            height: auto;
-            position: relative;
-        }
-        .sidebar a {
-            float: left;
-        }
-        .content {
-            margin-left: 0;
-        }
-    }
-
-    @media screen and (max-width: 400px) {
-        .sidebar a {
-            text-align: center;
-            float: none;
-        }
-    }*@
+ 
     </style>
 
 
@@ -88,13 +92,36 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        @Html.ActionLink("Application name", "Index", "Home", null, new { @class = "nav-link active" })
-        <a href="~/EmpCRUD/EmpList">Employee List</a>
-        <a href="~/StudCRUD/AddStud">Add a Student</a>
-        <a href="~/StudCRUD/UploadImage">Add Student Image</a>
-        <a href="~/StudCRUD/UploadStudent">Upload as Excel File</a>
-        <a href="~/StudCRUD/ViewStudentImage">View students image</a>
-        <a href="~/EmpCRUD/AddEmp">Add an Employee</a>
+        @if (Session["UserType"].ToString() == "Admin")
+        {
+            <a href="~/Registration/AdminRegister">Admin Registration</a>
+            <a href="~/Registration/EmpRegister">Employee Registration</a>
+            <a href="~/Registration/StudRegister"> Student Registration</a>
+            <a href="~/Class/AddClass">Add Class</a>
+            <a href="~/Class/ClassList">Class List</a>
+            <a href="~/Department/AddDept">Add Department</a>
+            <a href="~/Department/DeptList">Department List</a>
+            <a href="~/Section/AddSection">Add Section</a>
+            <a href="~/Section/SectionList">View Sections</a>
+            <a href="~/StudCRUD/UploadImage">Add Student Image</a>
+            <a href="~/StudCRUD/UploadStudent">Upload as Excel File</a>
+            <a href="~/Fee/AddFeeStruct">Add Fee Structure</a>
+            <a href="~/Fee/FeeStructList">View Fee List</a>
+            <a href="~/FeeCollection/AddFeeCol"> Add Fee Collection</a>
+            <a href="~/FeeCollection/FeeColList"> Fee Collection List</a>
+            <a href="~/Login/Logout">Logout</a>
+        }
+        else if (Session["UserType"].ToString() == "Employee")
+        {
+            <a href="~/EmpCRUD/EmpList">Employee List</a>
+            <a href="~/Login/Logout">Logout</a>
+
+        }
+        else
+        {
+            <a href="~/StudCRUD/StudList">Student List</a>
+            <a href="~/Login/Logout">Logout</a>
+        }
     </div>
 
     <!-- Main content -->
@@ -102,8 +129,8 @@
         @RenderBody()
         @*<hr />*@
         @*<footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>*@
+                <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            </footer>*@
     </div>
 
     <!-- Scripts -->
@@ -114,7 +141,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#studentTable').DataTable({
+            $('#tblAll').DataTable({
                 "aaSorting": [[0, "desc"]],
                 responsive: true,
                 columnDefs: [{
@@ -123,7 +150,19 @@
                 }]
             });
         });
+
+        $(document).ready(function () {
+            // Apply purple background to the DataTable header
+            $('#tblAll thead').css({
+                'background-color': '#800080',  // Purple background
+                'color': 'white'                // White text for contrast
+            });
+        });
+
+
     </script>
+
+
 
 </body>
 </html>

@@ -7,6 +7,7 @@ using SMS.Models;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Diagnostics;
 
 namespace SMS.Repositories
 {
@@ -34,9 +35,9 @@ namespace SMS.Repositories
                     f.FeeColId = sdr.GetInt32(0);
                     f.StudentId = sdr.GetInt32(1);
                     f.ClassId = sdr.GetInt32(2);
-                    f.Installment1 = sdr.GetString(3);
-                    f.Installment2 = sdr.GetString(4);
-                    f.Installment3 = sdr.GetString(5);
+                    f.Installment1 = sdr.GetBoolean(3);
+                    f.Installment2 = sdr.GetBoolean(4);
+                    f.Installment3 = sdr.GetBoolean(5);
                     f.FeeStatus = sdr.GetString(6);
 
                     feecollist.Add(f);
@@ -69,8 +70,8 @@ namespace SMS.Repositories
                 cmd.Parameters.AddWithValue("@ClassId", obj.ClassId);
                 cmd.Parameters.AddWithValue("@Installment1", obj.Installment1);
                 cmd.Parameters.AddWithValue("@Installment2", obj.Installment2);
-                cmd.Parameters.AddWithValue("@Intallment3", obj.Installment3);
-                cmd.Parameters.AddWithValue("@FeeStatus", obj.FeeStatus);
+                cmd.Parameters.AddWithValue("@Installment3", obj.Installment3);
+            
                 cmd.Parameters.AddWithValue("@Mode", 2);
 
                 int status = cmd.ExecuteNonQuery();
@@ -89,6 +90,7 @@ namespace SMS.Repositories
             catch (Exception ex)
             {
                 con.Close();
+                Debug.WriteLine(ex.Message);
                 throw ex.InnerException;
             }
             finally
@@ -114,7 +116,7 @@ namespace SMS.Repositories
                 cmd.Parameters.AddWithValue("@ClassId", obj.ClassId);
                 cmd.Parameters.AddWithValue("@Installment1", obj.Installment1);
                 cmd.Parameters.AddWithValue("@Installment2", obj.Installment2);
-                cmd.Parameters.AddWithValue("@Intallment3", obj.Installment3);
+                cmd.Parameters.AddWithValue("@Installment3", obj.Installment3);
                 cmd.Parameters.AddWithValue("@FeeStatus", obj.FeeStatus);
                 cmd.Parameters.AddWithValue("@Mode", 3);
 
@@ -205,9 +207,9 @@ namespace SMS.Repositories
                     obj.FeeColId = sdr.GetInt32(0);
                     obj.StudentId = sdr.GetInt32(1);
                     obj.ClassId = sdr.GetInt32(2);
-                    obj.Installment1 = sdr.GetString(3);
-                    obj.Installment2 = sdr.GetString(4);
-                    obj.Installment3 = sdr.GetString(5);
+                    obj.Installment1 = sdr.GetBoolean(3);
+                    obj.Installment2 = sdr.GetBoolean(4);
+                    obj.Installment3 = sdr.GetBoolean(5);
                     obj.FeeStatus = sdr.GetString(6);
                 }
             }
@@ -258,10 +260,10 @@ namespace SMS.Repositories
             return NextId;
         }
 
-        internal string  GetInstallation1ByStudId(int studid)
+        internal bool  GetInstallation1ByStudId(int studid)
                          
         {
-            string result = string.Empty;
+            bool result = false;
 
             try
             {
@@ -278,11 +280,11 @@ namespace SMS.Repositories
                 {
                     if (!sdr.IsDBNull(0))
                     {
-                        result = sdr.GetString(0); // Read the decimal value
+                        result = sdr.GetBoolean(0); // Read the decimal value
                     }
                     else
                     {
-                        result = "false";
+                        result = false;
                     }
 
                 }
@@ -302,10 +304,10 @@ namespace SMS.Repositories
         }
 
 
-        internal string GetInstallation2ByStudId(int studid)
+        internal bool GetInstallation2ByStudId(int studid)
 
         {
-            string result = string.Empty;
+            bool result = false;
 
             try
             {
@@ -322,11 +324,11 @@ namespace SMS.Repositories
                 {
                     if (!sdr.IsDBNull(0))
                     {
-                        result = sdr.GetString(0); // Read the decimal value
+                        result = sdr.GetBoolean(0); // Read the decimal value
                     }
                     else
                     {
-                        result = "false";
+                        result = false;
                     }
 
                 }
@@ -346,10 +348,10 @@ namespace SMS.Repositories
         }
 
 
-        internal string GetInstallation3ByStudId(int studid)
+        internal bool GetInstallation3ByStudId(int studid)
 
         {
-            string result = string.Empty;
+            bool result = false;
 
             try
             {
@@ -366,11 +368,11 @@ namespace SMS.Repositories
                 {
                     if (!sdr.IsDBNull(0))
                     {
-                        result = sdr.GetString(0); // Read the decimal value
+                        result = sdr.GetBoolean(0); // Read the decimal value
                     }
                     else
                     {
-                        result = "false";
+                        result = false;
                     }
 
                 }

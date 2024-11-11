@@ -1,9 +1,5 @@
 ﻿@model SMS.Models.FeeCollection
 
-@{
-    Layout = null;
-}
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -88,9 +84,15 @@
                     </div>
                 }
 
+
                 @using (Html.BeginForm("AddFeeCol", "FeeCollection", FormMethod.Post))
                 {
-                    @Html.HiddenFor(m => m.FeeColId)
+                    @Html.HiddenFor(model => model.FeeColId)
+
+                    @Html.HiddenFor(m => m.FeeStatus)
+                    @Html.HiddenFor(m => m.ClassName)
+                    @Html.HiddenFor(m => m.StudentName)
+
 
                     <div class="mb-3">
                         @Html.LabelFor(m => m.StudentId, "Student", new { @class = "form-label required" })
@@ -107,24 +109,22 @@
                     </div>
 
                     <div class="mb-3">
-                        @Html.LabelFor(m => m.Installment1, "Installment 1", new { @class = "form-label" })
-                        @Html.CheckBox("Installment1", true, new { @disabled = "disabled", @id = "IsChecked1" })
-
+                        @Html.LabelFor(m => m.Installment1, "Installment 1", new { @class = "form-label", @id = "Installment1" })
+                        @Html.CheckBoxFor(m => m.Installment1, new { @id = "IsChecked1" })
                     </div>
 
                     <div class="mb-3">
-                        @Html.LabelFor(m => m.Installment2, "Installment 2", new { @class = "form-label" })
-                        @Html.CheckBox("Installment2", true, new { @disabled = "disabled", @id = "IsChecked2" })
+                        @Html.LabelFor(m => m.Installment2, "Installment 2", new { @class = "form-label", @id = "Installment2" })
+                        @Html.CheckBoxFor(m => m.Installment2, new { @id = "IsChecked2" })
                     </div>
 
                     <div class="mb-3">
-                        @Html.LabelFor(m => m.Installment3, "Installment 3", new { @class = "form-label" })
-                        @Html.CheckBox("Installment3", true, new { @disabled = "disabled", @id = "IsChecked3" })
+                        @Html.LabelFor(m => m.Installment3, "Installment 3", new { @class = "form-label", @id = "Installment3" })
+                        @Html.CheckBoxFor(m => m.Installment3, new { @id = "IsChecked3" })
                     </div>
 
-                    @Html.HiddenFor(m => m.FeeStatus)
-                    @Html.HiddenFor(m => m.ClassName)
-                    @Html.HiddenFor(m => m.StudentName)
+
+
 
                     <button type="submit" class="btn btn-primary w-100">Save Fees</button>
                 }
@@ -135,93 +135,176 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            // Initially disable the StudentId dropdown
+    <script>
+
+$(document).ready(function () {
+
+    // Handle ClassId dropdown change
+    $('#classDropdown').change(function () {
+      
+        $('#StudentId').attr('disabled', false);
+        var classId = $(this).val();
+
+
+        if (classId) {
+         
+            $.ajax({
+                url: '@Url.Action("GetStudentsByClassId", "StudCRUD")',
+                type: 'GET',
+                data: { classId: classId },
+                success: function (data) {
+                    $('#StudentId').empty().append('<option value="">-- Select Section --</option>');
+                    $.each(data, function (index, item) {
+                        $('#StudentId').append('<option value="' + item.StudentId + '">' + item.StudentName + '</option>');
+                    });
+                },
+                error: function () {
+                    alert('Error loading students.');
+                }
+            });
+
+          
+            $.ajax({
+                url: '@Url.Action("GetInstallations", "FeeCollection")',  
+                type: 'GET',
+                data: { classId: classId },
+                success: function (response) {
+                   
+                    $('#Installation1').val(response[0]);
+                    $('#Installation2').val(response[1]);
+                    $('#Installation3').val(response[2]);
+                },
+                error: function () {
+                    alert('Error fetching installations.');
+                }
+            });
+        } else {
+            
+            $('#Installation1, #Installation2, #Installation3').val('');
             $('#StudentId').attr('disabled', true);
-        });
+        }
+    });
 
-        // Handle ClassId dropdown change
-        $('#classDropdown').change(function () {
-            $('#StudentId').attr('disabled', false);
-            var classId = $(this).val();
+    // Handle StudentId dropdown change
+    $('#StudentId').change(function () {
+    
+        var classId = $('#classDropdown').val();
 
-            // Make AJAX request to get installation values if a class is selected
-            if (classId) {
-                // Enable StudentId dropdown after class selection
-                 $.ajax({
-                    url: '@Url.Action("GetStudentsByClassId", "StudCRUD")',
-                    type: 'GET',
-                    data: { classId: classId },
-                    success: function (data) {
-                        $('#StudentId').empty().append('<option value="">-- Select Section --</option>');
-                        $.each(data, function (index, item) {
-                            $('#StudentId').append('<option value="' + item.StudentId + '">' + item.StudentName + '</option>');
-                        });
-                    },
-                    error: function () {
-                        alert('Error loading sections.');
-                    }
-                });
+        // Only proceed if a class has been selected
+        if (classId) {
+            var studentId = $(this).val();
 
+        
+            if (studentId) {
                 $.ajax({
-                    url: '@Url.Action("GetInstallations", "FeeCollection")',  // Change to your action method URL
+                    url: '@Url.Action("GetInstallationsByStudId", "FeeCollection")',  
                     type: 'GET',
-                    data: { classId: classId },
+                    data: { studId: studentId },
                     success: function (response) {
-                        // Assuming response contains installation1, installation2, installation3
-                        $('#Installation1').val(response[0]);
-                        $('#Installation2').val(response[1]);
-                        $('#Installation3').val(response[2]);
+
+                        alert("got in inst by stud id");
+                        // Assuming response contains the checkbox status (true/false)
+                        $('#IsChecked1').prop('checked', response[0]); 
+                        $('#IsChecked2').prop('checked', response[1]); 
+                        $('#IsChecked3').prop('checked', response[2]);
+
+                        // Disable checkboxes if true
+                        if (response[0]) {
+                            $('#IsChecked1').prop('disabled', true);  
+                        }
+                        if (response[1]) {
+                            $('#IsChecked2').prop('disabled', true);  
+                        }
+                        if (response[2]) {
+                            $('#IsChecked3').prop('disabled', true); 
+                        }
                     },
                     error: function () {
-                        alert('Error fetching installations.');
+                        alert('Error fetching checkbox status.');
                     }
                 });
             } else {
-                // Clear installation fields and disable StudentId dropdown if no class is selected
-                $('#Installation1, #Installation2, #Installation3').val('');
-                $('#StudentId').attr('disabled', true);
+                // Uncheck and enable checkboxes if no student is selected
+                $('#IsChecked1').prop('checked', false).prop('disabled', false);
+                $('#IsChecked2').prop('checked', false).prop('disabled', false);
+                $('#IsChecked3').prop('checked', false).prop('disabled', false);
             }
-        });
-
-        // Handle StudentId dropdown change
-        $('#StudentId').change(function () {
-            // Get the value of classDropdown
-            var classId = $('#classDropdown').val();
-
-            // Only proceed if a class has been selected
-            if (classId) {
-                var studentId = $(this).val();
-
-                // Make AJAX request to check the checkbox status only if studentId is selected
-                if (studentId) {
-                    $.ajax({
-                        url: '@Url.Action("GetInstallationsByStudId", "FeeCollection")',  // Change to your action method URL
-                        type: 'GET',
-                        data: { studentId: studentId },
-                        success: function (response) {
-                            // Assuming response contains isChecked (true/false)
-                            $('#IsChecked1').prop('checked', response[0]); // Check status for installation 1
-                            $('#IsChecked2').prop('checked', response[1]); // Check status for installation 2
-                            $('#IsChecked3').prop('checked', response[2]);
-                        },
-                        error: function () {
-                            alert('Error fetching checkbox status.');
-                        }
-                    });
-                } else {
-                    // Uncheck the checkboxes if no student is selected
-                    $('#IsChecked1').prop('checked', false);
-                    $('#IsChecked2').prop('checked', false);
-                    $('#IsChecked3').prop('checked', false);
-                }
-            }
-        });
+        }
     });
+
+  
+    $('#IsChecked1').on('change', function () {
+        if ($(this).prop('checked')) {
+            $('input[name="Installment1"]').val('true');
+        } else {
+            $('input[name="Installment1"]').val('false');
+        }
+    });
+
+    $('#IsChecked2').on('change', function () {
+        if ($(this).prop('checked')) {
+            $('input[name="Installment2"]').val('true');
+        } else {
+            $('input[name="Installment2"]').val('false');
+        }
+    });
+
+    $('#IsChecked3').on('change', function () {
+        if ($(this).prop('checked')) {
+            $('input[name="Installment3"]').val('true');
+        } else {
+            $('input[name="Installment3"]').val('false');
+        }
+    });
+
+  
+    if ($('#IsChecked1').prop('checked')) {
+        $('input[name="Installment1"]').val('true');
+        $('#IsChecked1').prop('disabled', true);  
+    } else {
+        $('input[name="Installment1"]').val('false');
+    }
+
+    if ($('#IsChecked2').prop('checked')) {
+        $('input[name="Installment2"]').val('true');
+        $('#IsChecked2').prop('disabled', true);  
+    } else {
+        $('input[name="Installment2"]').val('false');
+    }
+
+    if ($('#IsChecked3').prop('checked')) {
+        $('input[name="Installment3"]').val('true');
+        $('#IsChecked3').prop('disabled', true);  
+    } else {
+        $('input[name="Installment3"]').val('false');
+    }
+
+
+    if ($('#IsChecked1').prop('disabled')) {
+        $('input[name="Installment1"]').val('true');  
+    } else {
+        $('input[name="Installment1"]').val('false'); 
+    }
+
+    if ($('#IsChecked2').prop('disabled')) {
+        $('input[name="Installment2"]').val('true');  
+    } else {
+        $('input[name="Installment2"]').val('false'); 
+    }
+
+    if ($('#IsChecked3').prop('disabled')) {
+        $('input[name="Installment3"]').val('true');  
+    } else {
+        $('input[name="Installment3"]').val('false');
+    }
+
+});
+
+
+
     </script>
 
 
 
 </body>
-</html >
+</html>
