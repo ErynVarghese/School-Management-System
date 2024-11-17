@@ -1,0 +1,72 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+@model SMS.Models.Employer
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Employee Details</title>
+
+</head>
+<body>
+    <div class="employee-details">
+        <h2>Employee Details</h2>
+        <p>
+            <span>Employee ID:</span>
+
+            @Model.EmpId
+
+        </p>
+        <p>
+            <span>Name:</span>
+
+            @Model.EmpName
+        </p>
+
+        <p>
+            <span>Contact Number:</span>
+            @Model.ContactNo
+        </p>
+        <p>
+            <span>Email:</span>
+            @Model.Email
+        </p>
+        <p>
+            <span>Date of Birth:</span>
+            @(Model.DOB.HasValue ? Model.DOB.Value.ToString("dd-MM-yyyy") : "-")
+        </p>
+        <p>
+            <span>Department ID:</span>
+            @Model.DeptId
+        </p>
+        <p>
+            <span>Date of Joining:</span>
+            @(Model.DOJ.HasValue ? Model.DOJ.Value.ToString("dd-MM-yyyy") : "-")
+        </p>
+
+        <p>
+            <span>UserName:</span>
+            @Model.EmpUsername
+        </p>
+
+        <p>
+            <span>Password:</span>
+            @Model.EmpPassword
+        </p>
+
+    </div>
+
+
+    <script>
+        window.onload = function () {
+            window.print();
+        };
+    </script>
+</body>
+</html>

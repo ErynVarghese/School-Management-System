@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<SMS.Models.Employer>
 
-
+@{ 
+    Layout = null;
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -90,7 +92,8 @@
                             <td>@(emp.DOJ.HasValue ? emp.DOJ.Value.ToString("dd-MM-yyyy") : "")</td>
                             <td>
                                 <a href="@Url.Action("AddEmp", "EmpCRUD", new { id = emp.EmpId })">Edit</a> |
-                                <a href="@Url.Action("DeleteEmp", "EmpCRUD", new { id = emp.EmpId })">Delete</a>
+                                <a href="@Url.Action("DeleteEmp", "EmpCRUD", new { id = emp.EmpId })">Delete</a> |
+                                <a href="@Url.Action("PrintEmployee", "EmpCRUD", new { id = emp.EmpId })" target="_blank">Print</a>
                             </td>
                         </tr>
                     }

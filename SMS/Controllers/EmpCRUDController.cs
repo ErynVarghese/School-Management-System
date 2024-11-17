@@ -10,7 +10,8 @@ using System.Configuration;
 using SMS.Repositories;
 using OfficeOpenXml; // Make sure to include this namespace
 using System.IO;
-
+using System.Web.UI;
+using System.Reflection.Metadata;
 
 namespace SMS.Controllers
 {
@@ -211,6 +212,19 @@ namespace SMS.Controllers
                 TempData["Error"] = "Error occured" + ex.Message;
                 return RedirectToAction("EmpList");
             }
+        }
+
+
+        public ActionResult PrintEmployee(int id)
+        {
+            Employer emp = emprepo.GetById(id);
+
+            if (emp == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View( emp);
         }
 
 

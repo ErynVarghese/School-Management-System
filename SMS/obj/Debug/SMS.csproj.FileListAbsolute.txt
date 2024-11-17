@@ -183,3 +183,7 @@ D:\Users\Eryn\Git\SMS\SMS\bin\System.Text.Encodings.Web.xml
 D:\Users\Eryn\Git\SMS\SMS\bin\System.Text.Json.xml
 D:\Users\Eryn\Git\SMS\SMS\bin\System.Threading.Tasks.Extensions.xml
 D:\Users\Eryn\Git\SMS\SMS\bin\System.ValueTuple.xml
+D:\Users\Eryn\Git\SMS\SMS\bin\System.Collections.Immutable.dll
+D:\Users\Eryn\Git\SMS\SMS\bin\System.Reflection.Metadata.dll
+D:\Users\Eryn\Git\SMS\SMS\bin\System.Collections.Immutable.xml
+D:\Users\Eryn\Git\SMS\SMS\bin\System.Reflection.Metadata.xml
