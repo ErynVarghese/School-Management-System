@@ -36,5 +36,9 @@ namespace SMS.Models
 
         [Required(ErrorMessage = "EmpPassword is required.")]
         public int? EmpPassword { get; set; }
+
+        public string EmpImageBase64 { get; set; }
+
+        public string FileExtension { get; set; }
     }
 }

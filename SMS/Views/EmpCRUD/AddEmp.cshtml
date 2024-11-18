@@ -1,8 +1,6 @@
 ﻿@model SMS.Models.Employer
 
-@{
-    Layout = null;
-}
+
 
 <!DOCTYPE html>
 
@@ -95,7 +93,7 @@
                     </div>
                 }
 
-                @using (Html.BeginForm("AddEmp", "EmpCRUD", FormMethod.Post, new { id = "employeeForm" }))
+                @using (Html.BeginForm("AddEmp", "EmpCRUD", FormMethod.Post, new { id = "employeeForm", enctype = "multipart/form-data" }))
                 {
                     if (Model.EmpId > 0)
                     {
@@ -154,6 +152,11 @@
                         @Html.LabelFor(model => model.EmpPassword, "Password", new { @class = "form-label required" })
                         @Html.PasswordFor(model => model.EmpPassword, new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.EmpPassword, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="EmpImage"> Upload Image</label>
+                        <input type="file" name="EmpImage" id="EmpImage" class="form-control"  />
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100">Save Employee</button>

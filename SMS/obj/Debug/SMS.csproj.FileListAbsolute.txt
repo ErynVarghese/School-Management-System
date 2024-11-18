@@ -187,3 +187,9 @@ D:\Users\Eryn\Git\SMS\SMS\bin\System.Collections.Immutable.dll
 D:\Users\Eryn\Git\SMS\SMS\bin\System.Reflection.Metadata.dll
 D:\Users\Eryn\Git\SMS\SMS\bin\System.Collections.Immutable.xml
 D:\Users\Eryn\Git\SMS\SMS\bin\System.Reflection.Metadata.xml
+D:\Users\Eryn\Git\SMS\SMS\bin\BouncyCastle.Cryptography.dll
+D:\Users\Eryn\Git\SMS\SMS\bin\MimeKit.dll
+D:\Users\Eryn\Git\SMS\SMS\bin\BouncyCastle.Cryptography.xml
+D:\Users\Eryn\Git\SMS\SMS\bin\MimeKit.pdb
+D:\Users\Eryn\Git\SMS\SMS\bin\MimeKit.xml
+D:\Users\Eryn\Git\SMS\SMS\bin\MimeKit.dll.config

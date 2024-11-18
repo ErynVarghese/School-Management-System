@@ -8,10 +8,12 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using SMS.Repositories;
-using OfficeOpenXml; // Make sure to include this namespace
+using OfficeOpenXml; 
 using System.IO;
 using System.Web.UI;
 using System.Reflection.Metadata;
+using System.Diagnostics;
+using MimeKit;
 
 namespace SMS.Controllers
 {
@@ -66,7 +68,7 @@ namespace SMS.Controllers
 
 
         [HttpPost]
-        public ActionResult AddEmp(Employer emp)
+        public ActionResult AddEmp(Employer emp, HttpPostedFileBase EmpImage)
         {
 
             if (ModelState.IsValid)
@@ -77,6 +79,12 @@ namespace SMS.Controllers
                     if (emp.EmpId > 0)
                     {
                         string result = emprepo.Update(emp);
+                        
+                        if (EmpImage != null && EmpImage.ContentLength > 0)
+                        {
+                            UploadImage(EmpImage, emp.EmpId);
+                        }
+
                         if (result == "Success")
                         {
                             ModelState.Clear();
@@ -90,6 +98,14 @@ namespace SMS.Controllers
                     else
                     {
                         string result = emprepo.Create(emp);
+
+                        if (EmpImage != null && EmpImage.ContentLength > 0)
+                        {
+                            int next = emprepo.GetNextId();
+                            UploadImage(EmpImage, next-1);
+                        }
+
+
                         if (result == "Success")
                         {
                             ModelState.Clear();
@@ -224,8 +240,103 @@ namespace SMS.Controllers
                 return HttpNotFound();
             }
 
+            GetImageFromDatabase(id);
+
+
             return View( emp);
         }
+
+        public static (string base64Image, string fileExtension ) ConvertImageToBase64(string imagePath)
+        {
+            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+
+            string base64Image = Convert.ToBase64String(imageBytes);
+
+            string fileExtension = Path.GetExtension(imagePath).ToLower();
+
+            return (base64Image , fileExtension);
+
+        }
+
+
+
+
+        public ActionResult GetImageFromDatabase(int empid)
+
+        {
+            
+            var (base64Image, fileExtension) = emprepo.GetImageBase64(empid);
+
+            if (string.IsNullOrEmpty(base64Image))
+            {
+                return HttpNotFound();
+            }
+
+ 
+            //string mimeType = "image/" + fileExtension.TrimStart('.');
+
+            string mimeType = MimeTypes.GetMimeType(fileExtension);
+
+            ViewBag.ImageData = base64Image;
+            ViewBag.MimeType = mimeType;
+
+            return File(base64Image, mimeType);
+        }
+
+
+        [HttpGet]
+        public ActionResult ViewImage(int empid)
+        {
+            GetImageFromDatabase(empid);
+
+            return View();
+        }
+
+        [HttpPost]
+
+        public void UploadImage(HttpPostedFileBase file, int? empid = 0)
+        {
+
+            string fileName = Path.GetFileName(file.FileName);
+
+            try 
+            { 
+            using (var memoryStream = new MemoryStream())
+            {
+                file.InputStream.CopyTo(memoryStream);
+
+                byte[] imageBytes = memoryStream.ToArray();
+                string base64Image = Convert.ToBase64String(imageBytes);
+
+                string fileExtension = Path.GetExtension(file.FileName).ToLower();
+
+                string result = emprepo.StoreImageBase64(empid, base64Image, fileExtension);
+
+                    ViewBag.FileName = fileName;
+
+                    if (result == "Success")
+                {
+                    ModelState.Clear();
+                    TempData["Success"] = "Updated successfully...";
+                }
+                else
+                {
+                    TempData["Error"] = "Failed to update...";
+                }
+            }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error occured" + ex.Message;
+                Debug.WriteLine(ex.Message);
+
+            }
+
+
+           
+        }
+
+
 
 
     }

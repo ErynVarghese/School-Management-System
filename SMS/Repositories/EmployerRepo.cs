@@ -303,6 +303,85 @@ namespace SMS.Repositories
             return ds;
         }
 
+        public string StoreImageBase64(int? empid, string base64image, string fileExtension)
+        {
+
+            string result = string.Empty;
+
+            try
+            {
+                con.Open();
+
+                cmd = new SqlCommand("proc_emp", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@EmpId", empid);
+                cmd.Parameters.AddWithValue("@Imagebase64", base64image);
+                cmd.Parameters.AddWithValue("@FileExtension", fileExtension);
+                cmd.Parameters.AddWithValue("@Mode", 7);
+
+                int status = cmd.ExecuteNonQuery();
+
+                if (status <= 0)
+                {
+                    result = "Success";
+                }
+
+                else
+                {
+                    result = "Fail";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw ex.InnerException;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return result;
+        }
+
+
+        public (string, string) GetImageBase64(int empid)
+        {
+            string imagebase64 = null;
+            string fileextension = null;
+
+            try
+            {
+                cmd = new SqlCommand("proc_emp", con);
+                con.Open();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@empid", empid);
+                cmd.Parameters.AddWithValue("@Mode", 8);
+
+                SqlDataReader sdr = cmd.ExecuteReader();
+
+                if (sdr.Read())
+                {
+                     imagebase64 = sdr.GetString(0);
+                     fileextension = sdr.GetString(1);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                con.Close();
+                throw ex.InnerException;
+            }
+
+            finally
+            {
+                con.Close();
+            }
+
+            return (imagebase64, fileextension);
+        }
+
     }
 
     
