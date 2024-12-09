@@ -20,6 +20,7 @@ namespace SMS.Controllers
         ClassRepo classRepo = new ClassRepo();
 
         List<Class> classlist = new List<Class>();
+        List<FeeStructure> feestruct = new List<FeeStructure>();
 
         public FeeController()
         {
@@ -31,18 +32,45 @@ namespace SMS.Controllers
 
         }
 
-
+        [HttpGet]
         public ActionResult FeeStructList()
         {
-            List<FeeStructure> fList = new List<FeeStructure>();
+            List<FeeStructure> feeList = new List<FeeStructure>();
 
-            fList = feestructrepo.GetAll();
+            feeList = feestructrepo.GetAll();
 
-            return View(fList);
+            return View(feeList);
         }
 
+        [HttpPost]
 
-        [HttpGet]
+        public ActionResult FeeStructList(int drpClass = 0)
+        {
+            if (Session["UserType"].ToString() != "Admin")
+            {
+                return RedirectToAction("Authentication", "Login");
+            }
+            else
+            {
+                Session["Searched"] = true;
+
+                List<FeeStructure> feeList = new List<FeeStructure>();
+
+                feeList = feestructrepo.GetAll();
+
+
+                if (drpClass > 0)
+                {
+                    feeList = feeList.Where(c => c.ClassId == drpClass).ToList();
+                }
+
+                return View(feeList);
+            }
+        }
+
+    
+
+    [HttpGet]
         public ActionResult AddFeeStruct(int id = 0)
         {
             FeeStructure feestruct = new FeeStructure();

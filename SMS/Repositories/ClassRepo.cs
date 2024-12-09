@@ -343,5 +343,78 @@ namespace SMS.Repositories
 
         }
 
+
+        //internal string GetClassName(int classid)
+        //{
+        //    string classname = string.Empty;
+
+        //    try
+        //    {
+        //        con.Open();
+
+        //        SqlCommand checkCmd = new SqlCommand("proc_class", con);
+        //        checkCmd.CommandType = CommandType.StoredProcedure;
+        //        checkCmd.Parameters.AddWithValue("@ClassId", classid);
+        //        checkCmd.Parameters.AddWithValue("@mode", 8); ;
+
+        //        SqlDataReader reader = checkCmd.ExecuteReader();
+
+        //        if (reader.Read())
+        //        {
+        //             classname = reader.GetString(0);
+        //        }
+
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        con.Close();
+        //        throw ex.InnerException;
+        //    }
+        //    finally
+        //    {
+        //        con.Close();
+        //    }
+
+        //    return classname;
+
+        //}
+
+        //public List<Class> GetIdName()
+        //{
+        //    List<Class> classlist = new List<Class>();
+
+        //    try
+        //    {
+        //        con.Open();
+        //        cmd = new SqlCommand("proc_class", con);
+        //        cmd.CommandType = CommandType.StoredProcedure;
+        //        cmd.Parameters.AddWithValue("@Mode", 0);
+        //        SqlDataReader sdr = cmd.ExecuteReader();
+
+        //        while (sdr.Read())
+        //        {
+        //            Class cl = new Class();
+        //            cl.ClassId = sdr.GetInt32(0);
+        //            cl.ClassName = sdr.GetString(1);
+        //            cl.ClassSize = sdr.GetInt32(2);
+        //            cl.ClassFee = sdr.GetDecimal(3);
+        //            cl.InstallmentNo = sdr.GetInt32(4);
+        //            classlist.Add(cl);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        con.Close();
+        //        throw ex.InnerException;
+        //    }
+        //    finally
+        //    {
+        //        con.Close();
+        //    }
+
+        //    return classlist;
+        //}
+
     }
 }

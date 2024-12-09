@@ -1,28 +1,44 @@
 ﻿@model IEnumerable<SMS.Models.Student>
 
-@{
-    Layout = null;
-}
 
 <!DOCTYPE html>
+<html lang="en">
 
-<html>
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EmpList</title>
-  
 
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
     <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" />
+    <style>
+        /* Custom styles for DataTables header */
+        #tblAll thead {
+            background-color: #800080 !important; /* Purple background */
+            color: #ffffff !important; /* White text for contrast */
+            font-size: 14px !important; /* Font size */
+        }
 
-    <!-- jQuery (DataTables depends on it) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            /* Add border to header cells */
+            #tblAll thead th {
+                border-bottom: 2px solid #E6E6FA !important; /* Optional: border color */
+                padding: 10px !important; /* Padding for header */
+            }
 
-    <!-- DataTables JS -->
-    <script type="text/javascript" src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+        /* Style the table rows for visual enhancement */
+        #tblAll tbody tr:nth-child(even) {
+            background-color: #f2f2f2 !important;
+        }
 
-
+        #tblAll tbody tr:hover {
+            background-color: #e6e6fa !important;
+        }
+    </style>
 </head>
+
 <body>
     <div>
         @if (TempData["Success"] != null)
@@ -36,48 +52,49 @@
         <h2>Student List</h2>
         <div>@Html.ActionLink("New", "AddStud", "StudCRUD")</div>
 
-        @using (Html.BeginForm("StudList", "StudCRUD", FormMethod.Get)) { 
+        @using (Html.BeginForm("StudList", "StudCRUD", FormMethod.Get))
+        {
 
 
-        <table id="studentTable" class="display">
-            <thead>
+    <table id="tblAll" class="display table table-striped">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>DOB</th>
+                <th> Class Id </th>
+                <th>Section Id</th>
+                <th>Father Name</th>
+                <th>Contact No</th>
+                <th>Address</th>
+                <th>Student Fee</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var stud in Model)
+            {
                 <tr>
-                    <th>Student ID</th>
-                    <th>Student Name</th>
-                    <th>DOB</th>
-                    <th> Class Id </th>
-                    <th>Section Id</th>
-                    <th>Father Name</th>
-                    <th>Contact No</th>
-                    <th>Address</th>
-                    <th>Student Fee</th>
-                    <th>Actions</th>
+
+                    <td>@Html.DisplayFor(modelItem => stud.StudentId)</td>
+                    <td>@Html.DisplayFor(modelItem => stud.StudentName)</td>
+
+                    <td>@(stud.DOB.HasValue ? stud.DOB.Value.ToString("dd-MM-yyyy") : "")</td>
+                    <td>@Html.DisplayFor(modelItem => stud.ClassId)</td>
+                    <td>@Html.DisplayFor(modelItem => stud.SectionId)</td>
+                    <td>@Html.DisplayFor(modelItem => stud.FatherName)</td>
+                    <td>@Html.DisplayFor(modelItem => stud.ContactNo)</td>
+                    <td>@Html.DisplayFor(modelItem => stud.StudentAddress)</td>
+                    <td>@Html.DisplayFor(modelItem => stud.StudentFee)</td>
+
+                    <td>
+                        <a href="@Url.Action("AddStud", "StudCRUD", new { id = stud.StudentId })"> Edit </a>
+                        <a href="@Url.Action("DeleteStud", "StudCRUD", new { id = stud.StudentId })"> Delete </a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var stud in Model)
-                {
-                    <tr>
-
-                        <td>@Html.DisplayFor(modelItem => stud.StudentId)</td>
-                        <td>@Html.DisplayFor(modelItem => stud.StudentName)</td>
-
-                        <td>@(stud.DOB.HasValue ? stud.DOB.Value.ToString("dd-MM-yyyy") : "")</td>
-                        <td>@Html.DisplayFor(modelItem => stud.ClassId)</td>
-                        <td>@Html.DisplayFor(modelItem => stud.SectionId)</td>
-                        <td>@Html.DisplayFor(modelItem => stud.FatherName)</td>
-                        <td>@Html.DisplayFor(modelItem => stud.ContactNo)</td>
-                        <td>@Html.DisplayFor(modelItem => stud.StudentAddress)</td>
-                        <td>@Html.DisplayFor(modelItem => stud.StudentFee)</td>
-
-                        <td>
-                            <a href="@Url.Action("AddStud", "StudCRUD", new { id = stud.StudentId })"> Edit </a>
-                            <a href="@Url.Action("DeleteStud", "StudCRUD", new { id = stud.StudentId })"> Delete </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+            }
+        </tbody>
+    </table>
 
         }
 
@@ -96,17 +113,9 @@
 
 
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#studentTable').DataTable({
-                "aaSorting": [[0, "desc"]],
-                responsive: true,
-                columnDefs: [{
-                    "defaultContent": "-",
-                    "targets": "_all"
-                }]
-            });
-        });</script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
 
 
 </body>
