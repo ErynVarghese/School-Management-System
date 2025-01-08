@@ -306,6 +306,6 @@ D:\OneDrive\Git\SMS\SMS\bin\Antlr3.Runtime.pdb
 D:\OneDrive\Git\SMS\SMS\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 D:\OneDrive\Git\SMS\SMS\obj\Debug\SMS.csproj.AssemblyReference.cache
 D:\OneDrive\Git\SMS\SMS\obj\Debug\SMS.csproj.CoreCompileInputs.cache
-D:\OneDrive\Git\SMS\SMS\obj\Debug\SMS.csproj.CopyComplete
 D:\OneDrive\Git\SMS\SMS\obj\Debug\SMS.dll
 D:\OneDrive\Git\SMS\SMS\obj\Debug\SMS.pdb
+D:\OneDrive\Git\SMS\SMS\obj\Debug\SMS.csproj.Up2Date

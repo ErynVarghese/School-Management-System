@@ -57,46 +57,62 @@
         }
 
         <h2 class="text-center">Employee List</h2>
+
         <div class="text-center mb-3">
             @Html.ActionLink("New", "AddEmp", "EmpCRUD", null, new { @class = "btn btn-primary" })
             @Html.ActionLink("Export To Excel", "ExportToExcel", "EmpCRUD", null, new { @class = "btn btn-success" })
         </div>
 
-        @using (Html.BeginForm("EmpList", "EmpCRUD", FormMethod.Get))
+        @using (Html.BeginForm("EmpList", "EmpCRUD", FormMethod.Post))
         {
-            <table id="tblAll" class="display table table-striped">
-                <thead>
+            <div class="d-flex align-items-center gap-2">
+                <div class="filter-item">
+                    <label for="drpClass" class="form-label">Class Name</label>
+                    @Html.DropDownList("drpClass", new SelectList(ViewBag.ClassList, "ClassId", "ClassName"), "-- Select --", new { @class = "form-control", @id = "drpClass" })
+                </div>
+                <div class="ms-2">
+                    <button type="submit" class="btn btn-primary mt-4">Search</button>
+                </div>
+            </div>}
+
+
+
+
+
+
+        <table id="tblAll" class="display table table-striped">
+            <thead>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Employee Name</th>
+                    <th>Contact Number</th>
+                    <th>Email</th>
+                    <th>Date of Birth</th>
+                    <th>Department ID</th>
+                    <th>Date of Joining</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var emp in Model)
+                {
                     <tr>
-                        <th>Employee ID</th>
-                        <th>Employee Name</th>
-                        <th>Contact Number</th>
-                        <th>Email</th>
-                        <th>Date of Birth</th>
-                        <th>Department ID</th>
-                        <th>Date of Joining</th>
-                        <th>Actions</th>
+                        <td>@Html.DisplayFor(modelItem => emp.EmpId)</td>
+                        <td>@Html.DisplayFor(modelItem => emp.EmpName)</td>
+                        <td>@Html.DisplayFor(modelItem => emp.ContactNo)</td>
+                        <td>@Html.DisplayFor(modelItem => emp.Email)</td>
+                        <td>@(emp.DOB.HasValue ? emp.DOB.Value.ToString("dd-MM-yyyy") : "")</td>
+                        <td>@Html.DisplayFor(modelItem => emp.DeptId)</td>
+                        <td>@(emp.DOJ.HasValue ? emp.DOJ.Value.ToString("dd-MM-yyyy") : "")</td>
+                        <td>
+                            <a href="@Url.Action("AddEmp", "EmpCRUD", new { id = emp.EmpId })">Edit</a> |
+                            <a href="@Url.Action("DeleteEmp", "EmpCRUD", new { id = emp.EmpId })">Delete</a> |
+                            <a href="@Url.Action("PrintEmployee", "EmpCRUD", new { id = emp.EmpId })" target="_blank">Print</a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var emp in Model)
-                    {
-                        <tr>
-                            <td>@Html.DisplayFor(modelItem => emp.EmpId)</td>
-                            <td>@Html.DisplayFor(modelItem => emp.EmpName)</td>
-                            <td>@Html.DisplayFor(modelItem => emp.ContactNo)</td>
-                            <td>@Html.DisplayFor(modelItem => emp.Email)</td>
-                            <td>@(emp.DOB.HasValue ? emp.DOB.Value.ToString("dd-MM-yyyy") : "")</td>
-                            <td>@Html.DisplayFor(modelItem => emp.DeptId)</td>
-                            <td>@(emp.DOJ.HasValue ? emp.DOJ.Value.ToString("dd-MM-yyyy") : "")</td>
-                            <td>
-                                <a href="@Url.Action("AddEmp", "EmpCRUD", new { id = emp.EmpId })">Edit</a> |
-                                <a href="@Url.Action("DeleteEmp", "EmpCRUD", new { id = emp.EmpId })">Delete</a> |
-                                <a href="@Url.Action("PrintEmployee", "EmpCRUD", new { id = emp.EmpId })" target="_blank">Print</a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                }
+            </tbody>
+        </table>
         }
 
         @if (Session["UserType"] != null)

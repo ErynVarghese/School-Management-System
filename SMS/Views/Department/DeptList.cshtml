@@ -1,8 +1,5 @@
 ﻿@model IEnumerable<SMS.Models.Department>
 
-@{
-    Layout = "~/Views/Shared/Layout2.cshtml";
-}
 
 <!DOCTYPE html>
 
@@ -10,7 +7,36 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>DeptList</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" />
+    <style>
+        /* Custom styles for DataTables header */
+        #tblAll thead {
+            background-color: #800080 !important; /* Purple background */
+            color: #ffffff !important; /* White text for contrast */
+            font-size: 14px !important; /* Font size */
+        }
+
+            /* Add border to header cells */
+            #tblAll thead th {
+                border-bottom: 2px solid #E6E6FA !important; /* Optional: border color */
+                padding: 10px !important; /* Padding for header */
+            }
+
+        /* Style the table rows for visual enhancement */
+        #tblAll tbody tr:nth-child(even) {
+            background-color: #f2f2f2 !important;
+        }
+
+        #tblAll tbody tr:hover {
+            background-color: #e6e6fa !important;
+        }
+    </style>
 </head>
+
 <body>
     <div>
         @if (TempData["Success"] != null)
@@ -28,51 +54,51 @@
         @using (Html.BeginForm("DeptList", "Department", FormMethod.Get))
         {
 
-            <table>
-                <tr>
-                    <td>
-                        @Html.Label("Select Department Name")
-                    </td>
-                    <td>
-                        @Html.DropDownList("searchedname", (SelectList)ViewBag.DeptList, "Select a Department", new { @class = "form-control" })
-                    </td>
-                </tr>
 
 
+            <table id="tblAll" class="display table table-striped">
+                <thead>
+                    <tr>
+                        <th>Department ID</th>
+                        <th>Department Name</th>
+
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var dept in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(model => dept.DeptId)</td>
+                            <td>@Html.DisplayFor(model => dept.DeptName)</td>
+
+
+                            <td>
+                                <a href="@Url.Action("AddDept", "Department", new { id = dept.DeptId })">Edit</a>
+                                <a href="@Url.Action("DeleteDept", "Department", new { id = dept.DeptId })">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
             </table>
 
-            <button type="submit" class="btn btn-primary">Search</button>}
+        }
 
-
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Department ID</th>
-                    <th>Department Name</th>
-
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var dept in Model)
-                {
-                    <tr>
-                        <td>@Html.DisplayFor(model => dept.DeptId)</td>
-                        <td>@Html.DisplayFor(model => dept.DeptName)</td>
-
-
-                        <td>
-                            <a href="@Url.Action("AddDept", "Department", new { id = dept.DeptId })">Edit</a>
-                            <a href="@Url.Action("DeleteDept", "Department", new { id = dept.DeptId })">Delete</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-        @Html.ActionLink("Go Back to Main Page", "MainPage", "Login", null, new { @class = "btn btn-success" })
-
+        @if (Session["UserType"] != null)
+        {
+            if (Session["UserType"].ToString() == "Admin")
+            {
+                @Html.ActionLink("Go back to Main Page", "MainPage", "Login", null, new { @class = "btn btn-danger" })
+            }
+            else if (Session["UserType"].ToString() == "Student")
+            {
+                @Html.ActionLink("Logout", "Logout", "Login", null, new { @class = "btn btn-danger" })
+            }
+        }
 
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 </body>
 </html>
