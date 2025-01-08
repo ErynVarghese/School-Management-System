@@ -237,6 +237,14 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Stored Procedures\proc_admin.sql" />
+    <Content Include="Stored Procedures\proc_class.sql" />
+    <Content Include="Stored Procedures\proc_dept.sql" />
+    <Content Include="Stored Procedures\proc_emp.sql" />
+    <Content Include="Stored Procedures\proc_fee.sql" />
+    <Content Include="Stored Procedures\proc_feecol.sql" />
+    <Content Include="Stored Procedures\proc_section.sql" />
+    <Content Include="Stored Procedures\proc_student.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
